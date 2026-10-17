@@ -1,0 +1,3 @@
+import {quiz} from '../quiz.js';import {pick,shuffle,fa,NUMBER_WORDS} from '../data.js';import {level} from '../core.js';
+const things=[['پروانه','🦋'],['گل','🌸'],['کفشدوزک','🐞'],['قارچ','🍄'],['زنبور','🐝'],['خرگوش','🐇'],['آفتابگردان','🌻'],['جوجه‌تیغی','🦔']];
+export function start(){const lv=level('treasure'),t=pick(things),n=lv+Math.floor(Math.random()*4),opts=shuffle([t,...shuffle(things.filter(x=>x!==t)).slice(0,lv+1)]);quiz('treasure',start,NUMBER_WORDS[Math.min(n,10)]+' ('+fa(n)+') تا '+t[0]+' پیدا کن','<div class="cards">'+Array.from({length:12},(_,i)=>'<div class="panel" style="text-align:center;font-size:30px">'+(i<n?t[1]:pick(things)[1])+'</div>').join('')+'</div>',opts.map(x=>({value:x[0],html:x[1]+'<br>'+x[0]})),v=>v===t[0])}
