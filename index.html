@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#fff6e8">
 <meta name="description" content="بازی رنگ‌آمیزی پیکسلی برای کودکان؛ ساده، رایگان و قابل استفاده روی گوشی.">
+<link rel="manifest" href="./manifest.webmanifest">
 <title>دنیای رنگی من | بازی رنگ‌آمیزی</title>
 <style>
 :root{--ink:#29334a;--muted:#6c7588;--paper:#fffdf8;--pink:#ff7c9c;--yellow:#ffd166;--blue:#70d6ff;--mint:#9be7c4;--purple:#b8a1ff;--line:#f0e6d8;--shadow:0 8px 26px #493d2410}
@@ -132,6 +133,7 @@ document.querySelectorAll('#sizes button').forEach(b=>b.addEventListener('click'
 const old=loadSaved();if(old&&Number.isInteger(old.size)&&[8,10,12].includes(old.size)){size=old.size;if(old.pattern&&['heart','flower','fish','house','butterfly','rocket','apple','free'].includes(old.pattern))pattern=old.pattern;document.querySelectorAll('#sizes button').forEach(b=>b.classList.toggle('active',Number(b.dataset.size)===size));document.querySelectorAll('.template').forEach(b=>b.classList.toggle('active',b.dataset.pattern===pattern));}
 chooseColor(selected);buildBoard(true);
 })();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) { window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {})); }
 </script>
 </body>
 </html>
