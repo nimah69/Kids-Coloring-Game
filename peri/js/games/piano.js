@@ -1,0 +1,3 @@
+import {quiz} from '../quiz.js';import {pick,shuffle} from '../data.js';import {level,beep} from '../core.js';
+const keys=[['قرمز','#e53935',262],['زرد','#fdd835',330],['سبز','#43a047',392],['آبی','#1e88e5',523],['بنفش','#8e24aa',659]];
+export function start(){const lv=level('piano'),pool=keys.slice(0,lv+2),target=pick(pool);beep(target[2]);quiz('piano',start,'کدام کلید هم‌رنگ و هم‌نام کلید جادویی است؟','<div class="fairy-row"><span style="font-size:60px">🎹</span><span class="color-dot" style="background:'+target[1]+'"></span></div>',shuffle(pool).map(k=>({value:k[0],html:'<span class="color-dot" style="background:'+k[1]+'"></span><br>'+k[0]})),v=>{if(v===target[0])beep(target[2]);return v===target[0]})}
