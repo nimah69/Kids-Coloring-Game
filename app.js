@@ -89,7 +89,7 @@ document.querySelectorAll('.template').forEach(b=>{b.setAttribute('aria-pressed'
 $('paintTool').addEventListener('click',()=>{erasing=false;$('paintTool').classList.add('active');$('eraserTool').classList.remove('active')});
 $('eraserTool').addEventListener('click',()=>{erasing=true;$('eraserTool').classList.add('active');$('paintTool').classList.remove('active');$('eraserTool').setAttribute('aria-pressed','true');$('paintTool').setAttribute('aria-pressed','false')});
 $('undoBtn').addEventListener('click',()=>{const group=history.pop();if(!group)return;group.forEach(last=>{cells[last.i]=last.old;const el=board.children[last.i];el.style.backgroundColor=last.old===null?baseColor(last.i):last.old;el.style.borderColor=last.old===null?baseBorder(last.i):'#ffffff';el.setAttribute('aria-label',cellLabel(last.i))});updateStats();save(true)});
-$('resetBtn').addEventListener('click',()=>{if(!confirm('همه‌ی رنگ‌ها پاک شوند؟'))return;history=[];cells=Array(size*size).fill('#ffffff');Array.from(board.children).forEach((el,i)=>{el.style.backgroundColor=baseColor(i);el.style.borderColor=baseBorder(i);el.setAttribute('aria-label',cellLabel(i))});updateStats();save(true)});
+$('resetBtn').addEventListener('click',()=>{if(!confirm('همه‌ی رنگ‌ها پاک شوند؟'))return;history=[];cells=Array(size*size).fill(null);Array.from(board.children).forEach((el,i)=>{el.style.backgroundColor=baseColor(i);el.style.borderColor=baseBorder(i);el.style.outline='';el.setAttribute('aria-label',cellLabel(i))});$('checkResult').textContent='';updateStats();save(true)});
 $('checkBtn').addEventListener('click',()=>{
  if(pattern==='free'){$('checkResult').textContent='برای تمرین با الگوی رنگی، یکی از شکل‌ها را انتخاب کن.';return}
  let correct=0,total=0,wrong=[];
