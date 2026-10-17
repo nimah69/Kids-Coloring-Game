@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kids-coloring-game-v4';
+const CACHE_NAME = 'kids-coloring-game-v5';
 const APP_FILES = ['./', './index.html', './manifest.webmanifest'];
 
 self.addEventListener('install', event => {
