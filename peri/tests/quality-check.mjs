@@ -20,7 +20,7 @@ const quiz = read('js/quiz.js');
 assert.match(quiz,/if\(solved\|\|tried\.has\(i\)\|\|b\.disabled\)return/,'answers must be locked after a solved question');
 assert.match(quiz,/el\.disabled=true/,'all answers must lock after a correct answer');
 assert.match(quiz,/clearTimeout\(pendingNext\)/,'pending next-question timer must be cancellable');
-for (const game of ['cafe','clouds','frog','letters','treasure']) {
+for (const game of ['clouds','frog','letters']) {
  const src=read('js/games/'+game+'.js');
  assert.ok(src.includes('quiz('), game+' must register quiz logic');
  assert.ok(src.includes('v=>'), game+' must check a response');
@@ -28,5 +28,8 @@ for (const game of ['cafe','clouds','frog','letters','treasure']) {
 assert.match(read('js/games/clouds.js'),/n-2\*step/,'cloud sequence must show a consistent pattern');
 assert.match(read('js/games/frog.js'),/while\(a===b\)/,'frog comparison must avoid equal groups');
 assert.match(read('js/games/treasure.js'),/filter\(x=>x!==target\)/,'treasure grid must avoid accidental extra target items');
+assert.match(read('js/games/cafe.js'),/b\.onclick=\(\)=>/,'cafe must support touch interaction');
+assert.match(read('js/games/treasure.js'),/b\.onclick=\(\)=>/,'treasure must support touch-to-collect interaction');
+assert.match(read('js/games/piano.js'),/function play\(sequence\)/,'piano must play note sequences');
 assert.match(coloringApp,/cells=Array\(size\*size\)\.fill\(null\)/,'reset must clear cells as unpainted');
 console.log('Peri quality checks passed.');
