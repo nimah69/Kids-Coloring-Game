@@ -57,6 +57,11 @@ for (const [skill, questions] of Object.entries(bank)) {
     assert.equal(new Set(question.options).size, question.options.length, skill + ': duplicate options');
   }
 }
+assert.ok(!bank.pattern.some(q => q.q === 'کدام اندازه بعدی است؟'), 'Pattern prompt must describe the shown visual');
+for (const question of bank.math.filter(q => q.q.includes('−'))) {
+  assert.ok(question.visual.includes('−'), 'Subtraction visual must show the subtraction operation: ' + question.q);
+}
+
 const mathFunction = js.match(/function makeLevelQuestion\([\s\S]*?\nfunction renderActivity/);
 assert.ok(mathFunction && !/options=[^;]*\.map\(String\)/.test(mathFunction[0]), 'Generated number options should use Persian formatting');
 assert.ok(html.includes('Content-Security-Policy'), 'CSP meta tag required');
