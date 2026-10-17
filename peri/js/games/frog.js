@@ -1,2 +1,14 @@
-import {quiz} from '../quiz.js';import {fa,pick,shuffle} from '../data.js';import {level} from '../core.js';
-export function start(){const lv=level('frog'),a=lv===1?1+Math.floor(Math.random()*5):lv===2?1+Math.floor(Math.random()*20):10+Math.floor(Math.random()*90),b=lv===1?1+Math.floor(Math.random()*5):lv===2?1+Math.floor(Math.random()*20):10+Math.floor(Math.random()*90),greater=Math.random()<.5,answer=greater?(a===b?a+1:Math.max(a,b)):Math.min(a,b);const left=greater?a:b,right=greater?b:a;quiz('frog',start,lv===1?'کدام گروه سیب بیشتری دارد؟':greater?'کدام عدد بزرگ‌تر است؟':'کدام عدد کوچک‌تر است؟','<div class="fairy-row"><div class="panel"> '+(lv===1?'🍎 '.repeat(a):fa(a))+'</div><div class="panel">'+(lv===1?'🍎 '.repeat(b):fa(b))+'</div></div>',shuffle([{value:answer,html:'🐸 '+fa(answer)},{value:answer+1,html:fa(answer+1)},{value:Math.max(1,answer-1),html:fa(Math.max(1,answer-1))}]).slice(0,lv+1).map(x=>x),v=>v===answer)}
+import {quiz} from '../quiz.js';
+import {fa,shuffle} from '../data.js';
+import {level} from '../core.js';
+export function start(){
+  const lv=level('frog'),max=lv===1?5:lv===2?20:99;
+  let a=1+Math.floor(Math.random()*max),b=1+Math.floor(Math.random()*max);
+  while(a===b)b=1+Math.floor(Math.random()*max);
+  const greater=Math.random()<.5,answer=greater?Math.max(a,b):Math.min(a,b);
+  const distractor=greater?Math.max(a,b)+1:Math.max(1,Math.min(a,b)-1);
+  const values=[...new Set([a,b,distractor])];
+  const choices=shuffle(values).map(x=>({value:x,html:lv===1?'🐸 '+('🍎 '.repeat(x)):'🐸 '+fa(x)}));
+  const visual='<div class="fairy-row"><div class="panel"><strong>گروه اول</strong><p style="font-size:24px">'+(lv===1?'🍎 '.repeat(a):fa(a))+'</p></div><div class="panel"><strong>گروه دوم</strong><p style="font-size:24px">'+(lv===1?'🍎 '.repeat(b):fa(b))+'</p></div></div>';
+  quiz('frog',start,lv===1?(greater?'کدام گروه سیب بیشتری دارد؟':'کدام گروه سیب کمتری دارد؟'):(greater?'کدام عدد بزرگ‌تر است؟':'کدام عدد کوچک‌تر است؟'),visual,choices,v=>v===answer);
+}
