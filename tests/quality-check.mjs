@@ -1,38 +1,60 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 
-const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
-const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(match => match[1]);
-assert.ok(scripts.length > 0, 'Expected application JavaScript');
-const appScript = scripts.join('\n');
-assert.doesNotThrow(() => new Function(appScript), 'Application JavaScript must parse');
+const read = path => readFileSync(new URL(path, import.meta.url), 'utf8');
+const html = read('../index.html');
+const js = read('../app.js');
+const css = read('../style.css');
+const sw = read('../sw.js');
+const manifest = JSON.parse(read('../manifest.webmanifest'));
 
-const requiredIds = [
-  'sampleBoard', 'board', 'checkBtn', 'guideCheckBtn', 'guideNextBtn',
-  'reportStars', 'reportAttempts', 'reportAccuracy', 'skillReport', 'exportReportBtn'
-];
-for (const id of requiredIds) {
+assert.doesNotThrow(() => new Function(js), 'app.js must parse');
+for (const id of ['sampleBoard', 'board', 'checkBtn', 'guideCheckBtn', 'guideNextBtn',
+  'reportStars', 'reportAttempts', 'reportAccuracy', 'skillReport', 'exportReportBtn',
+  'childProfile', 'resetProgressBtn']) {
   assert.ok(html.includes('id="' + id + '"'), 'Missing required UI element: ' + id);
 }
-for (const feature of ['makeLevelQuestion', 'renderParentReport', 'updateGuide', 'kidsLearningProgress.v1']) {
-  assert.ok(appScript.includes(feature), 'Missing required feature: ' + feature);
+assert.ok(html.includes('href="./style.css"') && html.includes('src="./app.js"'));
+assert.ok(!html.includes('\\n<section class="guide-panel"'), 'Raw \\n before guide panel');
+assert.ok(!css.includes('\\n.guide-panel'), 'Raw \\n before guide CSS');
+assert.ok(js.includes('kidsColoringGame.v2:') && js.includes('migrateLegacyDrawing'), 'Versioned drawing storage and migration required');
+assert.ok(js.includes('pointerdown') && js.includes('pointermove') && js.includes('pointerup'), 'Pointer painting required');
+assert.ok(js.includes('kidsLearningProgress.v2:') && js.includes('kidsColoringProfile.v1'), 'Independent child profiles required');
+assert.ok(js.includes('toLocaleString(\\'fa-IR\\')'), 'Persian number formatting required');
+assert.ok(js.includes('function shuffleOptions(arr){const out=arr.slice();for('), 'Fisher-Yates shuffle required');
+
+for (const path of ['favicon.svg', 'apple-touch-icon.svg', 'icon-maskable.svg']) {
+  assert.ok(existsSync(new URL('../' + path, import.meta.url)), 'Missing PWA icon: ' + path);
+}
+assert.ok(manifest.icons.length >= 2, 'Manifest icons required');
+assert.ok(sw.includes('./app.js') && sw.includes('./style.css'), 'Cache must include split assets');
+assert.match(sw, /kids-coloring-game-v\d+/, 'Versioned cache required');
+assert.match(sw, /key\.startsWith\('kids-coloring-game-'\)/, 'Only this app cache family should be removed');
+
+const patternMatch = js.match(/const patterns=\{([\s\S]*?)\n\};/);
+assert.ok(patternMatch, 'Pattern definitions required');
+const patterns = new Function('return ({' + patternMatch[1] + '})')();
+for (const name of ['heart', 'fish', 'butterfly']) {
+  const rows = patterns[name];
+  assert.ok(rows.every(row => row.length === rows[0].length), name + ': rows must have equal width');
+  for (const row of rows) assert.equal(row, [...row].reverse().join(''), name + ': rows must be symmetrical');
 }
 
-const match = appScript.match(/const activityData=([\s\S]*?)\nlet activeActivity=/);
-assert.ok(match, 'Expected the learning activity question bank');
-const activities = new Function('return (' + match[1].trim().replace(/;\s*$/, '') + ')')();
-assert.deepEqual(Object.keys(activities).sort(), ['count', 'letters', 'math', 'pattern', 'shapes']);
-let questionCount = 0;
-for (const [skill, questions] of Object.entries(activities)) {
-  assert.ok(questions.length >= 6, skill + ' should have at least six starter questions');
+const bankMatch = js.match(/const activityData=([\s\S]*?)\nlet activeActivity=/);
+assert.ok(bankMatch, 'Learning question bank required');
+const bank = new Function('return (' + bankMatch[1].trim().replace(/;\s*$/, '') + ')')();
+assert.deepEqual(Object.keys(bank).sort(), ['count', 'letters', 'math', 'pattern', 'shapes']);
+let total = 0;
+for (const [skill, questions] of Object.entries(bank)) {
+  assert.ok(questions.length >= 15, skill + ': expected at least 15 questions');
   for (const question of questions) {
-    questionCount++;
-    assert.ok(question.options.includes(question.answer), skill + ': answer must be present in choices');
-    assert.equal(new Set(question.options).size, question.options.length, skill + ': choices should be unique');
+    total++;
+    assert.ok(question.options.includes(question.answer), skill + ': answer must be in options');
+    assert.equal(new Set(question.options).size, question.options.length, skill + ': duplicate options');
   }
 }
-assert.ok(questionCount >= 30, 'Expected at least 30 starter questions');
-
-const sw = readFileSync(new URL('../sw.js', import.meta.url), 'utf8');
-assert.match(sw, /kids-coloring-game-v\d+/, 'Service worker cache must be versioned');
-console.log('Quality checks passed: JavaScript syntax, required UI, 5 activity types, ' + questionCount + ' questions, answer choices, and cache version.');
+const mathFunction = js.match(/function makeLevelQuestion\([\s\S]*?\nfunction renderActivity/);
+assert.ok(mathFunction && !/options=[^;]*\.map\(String\)/.test(mathFunction[0]), 'Generated number options should use Persian formatting');
+assert.ok(html.includes('Content-Security-Policy'), 'CSP meta tag required');
+assert.ok(css.includes('font-family:"Vazirmatn"'), 'Vazirmatn font family should be configured');
+console.log('Quality checks passed: JavaScript syntax, a11y elements, storage migration, pointer painting, 3 symmetric patterns, 75+ questions, PWA assets, and CSP.');
