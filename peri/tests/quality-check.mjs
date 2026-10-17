@@ -32,6 +32,9 @@ assert.match(read('js/games/cafe.js'),/b\.onclick=\(\)=>/,'cafe must support tou
 assert.match(read('js/games/treasure.js'),/b\.onclick=\(\)=>/,'treasure must support touch-to-collect interaction');
 assert.match(read('js/games/piano.js'),/function play\(sequence\)/,'piano must play note sequences');
 assert.match(coloringApp,/cells=Array\(size\*size\)\.fill\(null\)/,'reset must clear cells as unpainted');
+const periSw = read('sw.js');
+assert.match(periSw, /e\.request\.mode==='navigate'/, 'Peri offline fallback must be limited to navigations');
+assert.match(periSw, /throw error/, 'Peri missing assets must not be answered with HTML');
 console.log('Peri quality checks passed.');
 
 assert.match(read('js/games/clouds.js'),/n-2\*step/,'clouds should show three terms of the same sequence');
