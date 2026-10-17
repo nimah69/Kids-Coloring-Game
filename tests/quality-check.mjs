@@ -20,7 +20,7 @@ assert.ok(!css.includes('\\n.guide-panel'), 'Raw \\n before guide CSS');
 assert.ok(js.includes('kidsColoringGame.v2:') && js.includes('migrateLegacyDrawing'), 'Versioned drawing storage and migration required');
 assert.ok(js.includes('pointerdown') && js.includes('pointermove') && js.includes('pointerup'), 'Pointer painting required');
 assert.ok(js.includes('kidsLearningProgress.v2:') && js.includes('kidsColoringProfile.v1'), 'Independent child profiles required');
-assert.ok(js.includes('toLocaleString(\\'fa-IR\\')'), 'Persian number formatting required');
+assert.ok(js.includes("toLocaleString('fa-IR')"), 'Persian number formatting required');
 assert.ok(js.includes('function shuffleOptions(arr){const out=arr.slice();for('), 'Fisher-Yates shuffle required');
 
 for (const path of ['favicon.svg', 'apple-touch-icon.svg', 'icon-maskable.svg']) {
