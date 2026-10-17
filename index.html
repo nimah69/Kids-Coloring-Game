@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff6e8">
+<meta name="description" content="بازی رنگ‌آمیزی پیکسلی برای کودکان؛ ساده، رایگان و قابل استفاده روی گوشی.">
+<title>دنیای رنگی من | بازی رنگ‌آمیزی</title>
+<style>
+:root{--ink:#29334a;--muted:#6c7588;--paper:#fffdf8;--pink:#ff7c9c;--yellow:#ffd166;--blue:#70d6ff;--mint:#9be7c4;--purple:#b8a1ff;--line:#f0e6d8;--shadow:0 8px 26px #493d2410}
+*{box-sizing:border-box}html{background:#fff6e8}body{margin:0;color:var(--ink);font-family:Tahoma,"Arial",sans-serif;background:radial-gradient(circle at 10% 0%,#ffe2e9 0,transparent 28rem),radial-gradient(circle at 100% 20%,#dff7ff 0,transparent 25rem),#fff8ed;min-height:100vh}
+button{font:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible{outline:3px solid #4d9eff;outline-offset:3px}.app{max-width:1000px;margin:auto;padding:18px 14px 32px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.brand{display:flex;align-items:center;gap:10px}.logo{width:48px;height:48px;border-radius:16px;background:linear-gradient(145deg,#ff8eaa,#ffcf70);display:grid;place-items:center;font-size:27px;box-shadow:0 5px 0 #e9a47e}.brand h1{font-size:clamp(19px,4vw,28px);margin:0 0 4px}.brand p{margin:0;font-size:12px;color:var(--muted)}.saved{border:1px solid #d7efdf;background:#f1fff5;color:#35764a;border-radius:999px;padding:8px 11px;font-size:12px;white-space:nowrap}
+.hero{background:#ffffffcf;border:1px solid #fff;box-shadow:var(--shadow);border-radius:24px;padding:18px;margin-bottom:16px}.hero h2{margin:0 0 7px;font-size:20px}.hero p{margin:0;color:var(--muted);font-size:14px;line-height:1.8}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:16px;align-items:start}.panel{background:#fffdf9;border:1px solid #fff;box-shadow:var(--shadow);border-radius:22px;padding:15px}.canvas-panel{min-width:0}.section-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}.section-head h3{margin:0;font-size:16px}.small-note{font-size:11px;color:var(--muted)}
+.templates{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:15px}.template{border:2px solid transparent;background:#fff7eb;border-radius:15px;padding:8px 4px;color:var(--ink);min-width:0}.template.active{border-color:#ff91ac;background:#fff0f4}.template .preview{display:grid;place-items:center;font-size:30px;height:42px}.template span{display:block;font-size:11px;margin-top:3px}
+.board-wrap{width:min(100%,520px);margin:0 auto;background:#fff;border:2px solid #f4e8da;border-radius:18px;padding:8px;box-shadow:inset 0 0 0 4px #fffaf2}.board{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:3px;aspect-ratio:1;width:100%;touch-action:manipulation;user-select:none}.cell{border:1px solid #e9e5df;border-radius:4px;background:#fff;min-width:0;min-height:0;padding:0;transition:background-color .12s}.cell:active{transform:scale(.94)}.board.grid-10{grid-template-columns:repeat(10,minmax(0,1fr))}.board.grid-12{grid-template-columns:repeat(12,minmax(0,1fr))}.board.grid-12 .cell{border-radius:2px}
+.status-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 2px 0;color:var(--muted);font-size:12px}.progress{height:7px;background:#f4ecdf;border-radius:99px;overflow:hidden;flex:1;max-width:160px}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff8ca7,#ffd166);border-radius:99px;transition:width .2s}
+.side{display:grid;gap:14px}.palette{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.swatch{aspect-ratio:1;border:3px solid #fff;box-shadow:0 0 0 1px #e8e1d7;border-radius:14px;position:relative}.swatch.selected{box-shadow:0 0 0 3px var(--ink);transform:translateY(-2px)}.swatch.selected:after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;font-size:20px;font-weight:bold;color:#fff;text-shadow:0 1px 4px #0008}.swatch.light.selected:after{color:#29334a;text-shadow:none}
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tool{border:1px solid var(--line);background:#fff9f0;border-radius:13px;padding:11px 7px;font-size:13px;color:var(--ink)}.tool.active{background:#e9f8ff;border-color:#7acdf0}.tool .ico{font-size:19px;display:block;margin-bottom:4px}.primary{border:0;background:linear-gradient(135deg,#ff8fab,#ffb4a2);color:#542b3b;font-weight:bold;border-radius:14px;padding:12px;width:100%;box-shadow:0 4px 0 #e58c9e}.primary:active{transform:translateY(2px);box-shadow:0 2px 0 #e58c9e}.secondary{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px;color:var(--ink)}.difficulty{display:flex;gap:6px}.difficulty button{flex:1;padding:9px 3px;border:1px solid var(--line);background:#fff;border-radius:10px;font-size:12px}.difficulty button.active{background:#f0eaff;border-color:#b8a1ff}.tip{background:#f0fbff;border:1px solid #d9f1fa;border-radius:14px;padding:12px;font-size:12px;line-height:1.8;color:#426578}.tip b{display:block;font-size:13px;margin-bottom:3px}
+footer{text-align:center;font-size:11px;color:#9296a3;margin-top:18px}
+@media(max-width:760px){.app{padding:12px 10px 25px}.layout{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}.side .panel:first-child{grid-column:1/-1}.palette{grid-template-columns:repeat(8,minmax(0,1fr));gap:7px}.swatch{border-radius:10px}.panel{padding:12px}.hero{padding:15px}.templates{grid-template-columns:repeat(4,minmax(0,1fr))}.brand p{font-size:11px}.saved{font-size:11px;padding:7px 9px}}
+@media(max-width:390px){.side{grid-template-columns:1fr}.side .panel:first-child{grid-column:auto}.palette{grid-template-columns:repeat(6,minmax(0,1fr))}.logo{width:42px;height:42px}.saved{white-space:normal;text-align:center;max-width:105px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand"><div class="logo" aria-hidden="true">🎨</div><div><h1>دنیای رنگی من</h1><p>هر خانه، یک رنگ؛ هر رنگ، یک لبخند!</p></div></div><div class="saved" id="saveStatus" aria-live="polite">✨ آماده‌ی بازی</div></header>
+<section class="hero"><h2>بیا با هم یک تصویر رنگی بسازیم! 🧸</h2><p>یک شکل را انتخاب کن، رنگ دلخواهت را بردار و روی خانه‌ها بزن. لازم نیست عجله کنی؛ نقاشی تو همین‌جا ذخیره می‌شود.</p></section>
+<div class="layout">
+<main class="panel canvas-panel">
+<div class="section-head"><h3>۱. یک الگو انتخاب کن</h3><span class="small-note">لمس کن تا انتخاب شود</span></div>
+<div class="templates" id="templates">
+<button class="template active" data-pattern="heart"><span class="preview">💗</span><span>قلب</span></button>
+<button class="template" data-pattern="flower"><span class="preview">🌼</span><span>گل</span></button>
+<button class="template" data-pattern="fish"><span class="preview">🐟</span><span>ماهی</span></button>
+<button class="template" data-pattern="house"><span class="preview">🏠</span><span>خانه</span></button>
+<button class="template" data-pattern="butterfly"><span class="preview">🦋</span><span>پروانه</span></button>
+<button class="template" data-pattern="rocket"><span class="preview">🚀</span><span>موشک</span></button>
+<button class="template" data-pattern="apple"><span class="preview">🍎</span><span>سیب</span></button>
+<button class="template" data-pattern="free"><span class="preview">✏️</span><span>آزاد</span></button>
+</div>
+<div class="section-head"><h3>۲. خانه‌ها را رنگ کن</h3><span class="small-note">هر خانه را لمس کن</span></div>
+<div class="board-wrap"><div class="board" id="board" role="group" aria-label="شبکه رنگ‌آمیزی"></div></div>
+<div class="status-row"><span id="countText">۰ خانه رنگ شده</span><div class="progress" aria-label="درصد رنگ‌آمیزی"><span id="progress"></span></div><span id="percent">۰٪</span></div>
+</main>
+<aside class="side">
+<section class="panel"><div class="section-head"><h3>۳. رنگ مورد علاقه‌ات</h3><span class="small-note">رنگ‌ها</span></div><div class="palette" id="palette"></div></section>
+<section class="panel"><div class="section-head"><h3>ابزارها</h3></div><div class="tools">
+<button class="tool active" id="paintTool"><span class="ico">🖌️</span>قلم رنگ</button>
+<button class="tool" id="eraserTool"><span class="ico">🧽</span>پاک‌کن</button>
+<button class="tool" id="undoBtn"><span class="ico">↩️</span>یک قدم عقب</button>
+<button class="tool" id="resetBtn"><span class="ico">🔄</span>پاک‌کردن همه</button>
+</div><div style="height:12px"></div><button class="primary" id="surpriseBtn">✨ یک رنگ شگفت‌انگیز!</button></section>
+<section class="panel"><div class="section-head"><h3>اندازه‌ی خانه‌ها</h3></div><div class="difficulty" id="sizes"><button data-size="8" class="active">۸ × ۸</button><button data-size="10">۱۰ × ۱۰</button><button data-size="12">۱۲ × ۱۲</button></div><div style="height:12px"></div><div class="tip"><b>💡 ایده‌ی کوچک</b>می‌توانی هر خانه را با یک رنگ متفاوت پر کنی. اگر اشتباه شد، نگران نباش؛ پاک‌کن همیشه اینجاست!</div></section>
+</aside>
+</div>
+<footer>ساخته‌شده برای بازی و خلاقیت کودکان · بدون تبلیغ و بدون نیاز به حساب کاربری</footer>
+</div>
+<script>
+(function(){
+'use strict';
+const colors=[['#ff5d73','قرمز'],['#ff914d','نارنجی'],['#ffd166','زرد'],['#70d6a3','سبز'],['#4ecdc4','فیروزه‌ای'],['#65a9ff','آبی'],['#8b7bff','بنفش'],['#ff8fc7','صورتی'],['#a66b45','قهوه‌ای'],['#29334a','سرمه‌ای'],['#ffffff','سفید'],['#b8c0cc','خاکستری']];
+const $=id=>document.getElementById(id), board=$('board');
+let size=8, pattern='heart', selected=colors[0][0], erasing=false, cells=[], history=[];
+const key='kidsColoringGame.v1';
+const patterns={
+heart:['..XX..XX.','XXXXXXXXX','.XXXXXXX.','..XXXXX..','...XXX...','....X....'],
+flower:['...X....','..XXX...','.XXXXX..','..XXX...','...X....','..XXX...','..X.X...'],
+fish:['...XX...','..XXXXXX','.XXXXXXXX','XXXXXXXXX','.XXXXXXXX','..XXXXXX','...XX...'],
+house:['...XX...','..XXXX..','.XXXXXX.','XXXXXXXX','XX.XX.XX','XX.XX.XX','XXXXXXXX'],
+butterfly:['XX....XX.','XXX..XXX.','.XXXXXX..','..XXXX...','.XXXXXX..','XXX..XXX.','XX....XX.'],
+rocket:['...XX...','..XXXX..','..XXXX..','..XXXX..','..XXXX..','.XXXXXX.','XX.XX.XX'],
+apple:['..XXXX..','.XXXXXX.','XXXXXXXX','XXXXXXXX','.XXXXXX.','..XXXX..','...XX...']
+};
+function makeMask(name,n){
+ const mask=Array(n*n).fill(false);
+ if(name==='free')return mask;
+ const rows=patterns[name]||patterns.heart, h=rows.length, w=Math.max(...rows.map(r=>r.length));
+ const scale=Math.min((n-2)/h,(n-2)/w), hh=Math.max(1,Math.round(h*scale)), ww=Math.max(1,Math.round(w*scale));
+ const top=Math.floor((n-hh)/2), left=Math.floor((n-ww)/2);
+ for(let y=0;y<hh;y++)for(let x=0;x<ww;x++){
+  const sy=Math.min(h-1,Math.floor(y*h/hh)),sx=Math.min(w-1,Math.floor(x*w/ww));
+  if(rows[sy][sx]==='X')mask[(top+y)*n+left+x]=true;
+ }
+ return mask;
+}
+function buildBoard(restore){
+ size=Number(size);board.innerHTML='';board.className='board'+(size===10?' grid-10':size===12?' grid-12':'');
+ const mask=makeMask(pattern,size), stored=restore?loadSaved():null;
+ cells=Array(size*size).fill('#ffffff');
+ if(stored&&stored.size===size&&stored.pattern===pattern&&stored.cells.length===cells.length)cells=stored.cells;
+ for(let i=0;i<size*size;i++){
+  const b=document.createElement('button');b.type='button';b.className='cell';b.dataset.i=i;
+  b.setAttribute('aria-label','خانه '+(i+1)+(mask[i]?' از الگوی شکل':''));
+  if(!mask[i]&&pattern!=='free')b.style.backgroundColor='#fff8ed';
+  b.style.backgroundColor=cells[i];if(cells[i]!=='#ffffff')b.style.borderColor='#ffffff';
+  b.addEventListener('click',()=>paint(i));board.appendChild(b);
+ }
+ updateStats();save(false);
+}
+function paint(i){
+ const next=erasing?'#ffffff':selected, old=cells[i];if(old===next)return;
+ history.push({i,old});if(history.length>100)history.shift();
+ cells[i]=next;const el=board.children[i];el.style.backgroundColor=next;el.style.borderColor=next==='#ffffff'?'#e9e5df':'#ffffff';
+ updateStats();save(true);
+}
+function updateStats(){
+ const n=cells.filter(c=>c!=='#ffffff').length,p=Math.round(n/cells.length*100);
+ $('countText').textContent=n.toLocaleString('fa-IR')+' خانه رنگ شده';
+ $('percent').textContent=p.toLocaleString('fa-IR')+'٪';$('progress').style.width=p+'%';
+}
+function save(show){try{localStorage.setItem(key,JSON.stringify({size,pattern,cells}));if(show)$('saveStatus').textContent='💾 نقاشی ذخیره شد';}catch(e){$('saveStatus').textContent='نقاشی آماده است';}}
+function loadSaved(){try{return JSON.parse(localStorage.getItem(key)||'null')}catch(e){return null}}
+function setPattern(name){
+ pattern=name;document.querySelectorAll('.template').forEach(b=>b.classList.toggle('active',b.dataset.pattern===name));
+ history=[];buildBoard(false);
+}
+function chooseColor(hex){
+ selected=hex;erasing=false;$('paintTool').classList.add('active');$('eraserTool').classList.remove('active');
+ document.querySelectorAll('.swatch').forEach(b=>b.classList.toggle('selected',b.dataset.color===hex));
+}
+colors.forEach((c,i)=>{const b=document.createElement('button');b.className='swatch'+(i===10?' light':'');b.style.backgroundColor=c[0];b.dataset.color=c[0];b.title=c[1];b.setAttribute('aria-label','رنگ '+c[1]);b.addEventListener('click',()=>chooseColor(c[0]));$('palette').appendChild(b)});
+document.querySelectorAll('.template').forEach(b=>b.addEventListener('click',()=>setPattern(b.dataset.pattern)));
+$('paintTool').addEventListener('click',()=>{erasing=false;$('paintTool').classList.add('active');$('eraserTool').classList.remove('active')});
+$('eraserTool').addEventListener('click',()=>{erasing=true;$('eraserTool').classList.add('active');$('paintTool').classList.remove('active')});
+$('undoBtn').addEventListener('click',()=>{const last=history.pop();if(!last)return;cells[last.i]=last.old;const el=board.children[last.i];el.style.backgroundColor=last.old;el.style.borderColor=last.old==='#ffffff'?'#e9e5df':'#ffffff';updateStats();save(true)});
+$('resetBtn').addEventListener('click',()=>{if(!confirm('همه‌ی رنگ‌ها پاک شوند؟'))return;history=[];cells=Array(size*size).fill('#ffffff');Array.from(board.children).forEach((el,i)=>{el.style.backgroundColor='#ffffff';el.style.borderColor='#e9e5df'});updateStats();save(true)});
+$('surpriseBtn').addEventListener('click',()=>{const c=colors[Math.floor(Math.random()*colors.length)][0];chooseColor(c);$('saveStatus').textContent='🎉 رنگ تازه انتخاب شد!'});
+document.querySelectorAll('#sizes button').forEach(b=>b.addEventListener('click',()=>{size=Number(b.dataset.size);document.querySelectorAll('#sizes button').forEach(x=>x.classList.toggle('active',x===b));history=[];buildBoard(false)}));
+const old=loadSaved();if(old&&Number.isInteger(old.size)&&[8,10,12].includes(old.size)){size=old.size;if(old.pattern&&['heart','flower','fish','house','butterfly','rocket','apple','free'].includes(old.pattern))pattern=old.pattern;document.querySelectorAll('#sizes button').forEach(b=>b.classList.toggle('active',Number(b.dataset.size)===size));document.querySelectorAll('.template').forEach(b=>b.classList.toggle('active',b.dataset.pattern===pattern));}
+chooseColor(selected);buildBoard(true);
+})();
+</script>
+</body>
+</html>
