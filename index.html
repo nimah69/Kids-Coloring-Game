@@ -29,7 +29,7 @@ footer{text-align:center;font-size:11px;color:#9296a3;margin-top:18px}
 .learning-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
 .learning-top h2{font-size:19px;margin:0 0 4px}.learning-top p{font-size:12px;line-height:1.7;color:var(--muted);margin:0}
 .star-count{background:#fff3c9;color:#795b00;border-radius:999px;padding:9px 12px;font-weight:bold;white-space:nowrap}
-.activity-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
+.activity-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:12px 0}
 .activity-tab{border:2px solid #eee7dc;background:#fffaf3;border-radius:15px;padding:10px 5px;color:var(--ink);font-weight:bold;font-size:12px;min-width:0}
 .activity-tab span{display:block;font-size:25px;margin-bottom:5px}.activity-tab.active{border-color:#8b7bff;background:#f3efff}
 .activity-box{border-radius:18px;background:linear-gradient(135deg,#f4fbff,#fff7f0);padding:15px;border:1px solid #e7f1f7}
@@ -57,6 +57,7 @@ footer{text-align:center;font-size:11px;color:#9296a3;margin-top:18px}
   <button class="activity-tab" data-activity="count"><span>🔢</span>عددشماری</button>
   <button class="activity-tab" data-activity="math"><span>➕</span>جمع و تفریق</button>
   <button class="activity-tab" data-activity="pattern"><span>🧩</span>الگوها و دقت</button>
+  <button class="activity-tab" data-activity="shapes"><span>🔺</span>رنگ‌ها و شکل‌ها</button>
  </div>
  <div class="activity-box">
   <div class="activity-meta"><span id="activityName">فارسی: حرف اول</span><span id="roundText">تمرین ۱</span></div>
@@ -231,6 +232,14 @@ const activityData={
   {q:'الگو را کامل کن.',visual:'🍎 🍎 🍐 🍎 🍎 ❓',options:['🍎','🍐','🍌'],answer:'🍐',explain:'دو سیب و یک گلابی تکرار می‌شود؛ بعدی گلابی است.'},
   {q:'به ترتیب رنگ‌ها دقت کن.',visual:'🟡 🟢 🟡 🟢 ❓',options:['🟢','🟡','🔵'],answer:'🟡',explain:'زرد و سبز یکی‌درمیان می‌آیند؛ بعدی زرد است.'},
   {q:'چه چیزی جای خالی را پر می‌کند؟',visual:'🔺 🔵 🔺 🔵 ❓',options:['🔺','🔵','🟦'],answer:'🔺',explain:'مثلث و دایره یکی‌درمیان تکرار می‌شوند؛ بعدی مثلث است.'}
+ ],
+ shapes:[
+  {q:'کدام رنگ زرد است؟',visual:'🟡 🔵 🔴',options:['🟡','🔵','🔴'],answer:'🟡',explain:'درست است؛ دایره‌ی زرد را پیدا کردی.'},
+  {q:'کدام شکل سه ضلع دارد؟',visual:'🔺 ⚪ 🟦',options:['🔺','⚪','🟦'],answer:'🔺',explain:'مثلث سه ضلع دارد. دایره گوشه ندارد.'},
+  {q:'کدام شکل گرد است؟',visual:'🟥 ⚪ 🔺',options:['🟥','⚪','🔺'],answer:'⚪',explain:'آفرین! دایره گرد است.'},
+  {q:'کدام رنگ سبز است؟',visual:'🟣 🟢 🟠',options:['🟣','🟢','🟠'],answer:'🟢',explain:'درست است؛ رنگ سبز را پیدا کردی.'},
+  {q:'کدام شکل چهار گوشه دارد؟',visual:'⚪ 🔺 🟦',options:['⚪','🔺','🟦'],answer:'🟦',explain:'مربع چهار ضلع و چهار گوشه دارد.'},
+  {q:'کدام رنگ قرمز است؟',visual:'🔵 🟡 🔴',options:['🔵','🟡','🔴'],answer:'🔴',explain:'آفرین! رنگ قرمز را پیدا کردی.'}
  ]
 };
 let activeActivity='letters', activityIndex=0, activityAnswered=false;
@@ -240,7 +249,7 @@ function shuffleOptions(arr){return arr.slice().sort(()=>Math.random()-.5)}
 function saveLearning(){try{localStorage.setItem('kidsLearningProgress.v1',JSON.stringify(learningProgress))}catch(e){} $('starCount').textContent='⭐ '+Number(learningProgress.stars||0).toLocaleString('fa-IR')+' ستاره'}
 function renderActivity(){
  const list=activityData[activeActivity];activityIndex=activityIndex%list.length;activityAnswered=false;
- const item=list[activityIndex];$('activityName').textContent=({letters:'فارسی: حرف و کلمه',count:'ریاضی: عددشماری',math:'ریاضی: جمع و تفریق',pattern:'دقت: الگوها'})[activeActivity];
+ const item=list[activityIndex];$('activityName').textContent=({letters:'فارسی: حرف و کلمه',count:'ریاضی: عددشماری',math:'ریاضی: جمع و تفریق',pattern:'دقت: الگوها',shapes:'شناخت: رنگ‌ها و شکل‌ها'})[activeActivity];
  $('roundText').textContent='تمرین '+(activityIndex+1).toLocaleString('fa-IR')+' از '+list.length.toLocaleString('fa-IR');
  $('activityQuestion').textContent=item.q;$('activityVisual').textContent=item.visual;$('activityFeedback').textContent='با دقت نگاه کن و جواب درست را انتخاب کن.';$('nextActivityBtn').disabled=true;
  const wrap=$('activityOptions');wrap.innerHTML='';
