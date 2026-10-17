@@ -24,13 +24,51 @@ footer{text-align:center;font-size:11px;color:#9296a3;margin-top:18px}
 @media(max-width:760px){.app{padding:12px 10px 25px}.layout{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}.side .panel:first-child{grid-column:1/-1}.palette{grid-template-columns:repeat(8,minmax(0,1fr));gap:7px}.swatch{border-radius:10px}.panel{padding:12px}.hero{padding:15px}.templates{grid-template-columns:repeat(4,minmax(0,1fr))}.brand p{font-size:11px}.saved{font-size:11px;padding:7px 9px}}
 @media(max-width:390px){.side{grid-template-columns:1fr}.side .panel:first-child{grid-column:auto}.palette{grid-template-columns:repeat(6,minmax(0,1fr))}.logo{width:42px;height:42px}.saved{white-space:normal;text-align:center;max-width:105px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
-</style>
+
+.learning{background:#fff;border:1px solid #fff;box-shadow:var(--shadow);border-radius:24px;padding:16px;margin-bottom:16px}
+.learning-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.learning-top h2{font-size:19px;margin:0 0 4px}.learning-top p{font-size:12px;line-height:1.7;color:var(--muted);margin:0}
+.star-count{background:#fff3c9;color:#795b00;border-radius:999px;padding:9px 12px;font-weight:bold;white-space:nowrap}
+.activity-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
+.activity-tab{border:2px solid #eee7dc;background:#fffaf3;border-radius:15px;padding:10px 5px;color:var(--ink);font-weight:bold;font-size:12px;min-width:0}
+.activity-tab span{display:block;font-size:25px;margin-bottom:5px}.activity-tab.active{border-color:#8b7bff;background:#f3efff}
+.activity-box{border-radius:18px;background:linear-gradient(135deg,#f4fbff,#fff7f0);padding:15px;border:1px solid #e7f1f7}
+.activity-meta{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:11px;margin-bottom:10px}
+.activity-question{font-size:20px;line-height:1.8;font-weight:bold;text-align:center;margin:8px 0 12px}
+.activity-visual{min-height:58px;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:5px;font-size:30px;margin:8px auto 14px}
+.activity-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.answer-option{border:2px solid #e6e8f2;background:white;border-radius:14px;min-height:54px;padding:9px 5px;font-size:18px;font-weight:bold;color:var(--ink)}
+.answer-option:disabled{opacity:1}.answer-option.correct{background:#e3f8e9;border-color:#55b878}.answer-option.incorrect{background:#fff0ed;border-color:#ff9a86}
+.activity-feedback{min-height:40px;text-align:center;font-size:13px;font-weight:bold;line-height:1.8;padding:8px 2px;color:#426578}
+.activity-actions{display:flex;gap:8px}.activity-actions button{flex:1}
+.learning-foot{font-size:11px;line-height:1.8;color:var(--muted);margin-top:10px}
+@media(max-width:520px){.learning{padding:12px}.activity-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.activity-question{font-size:18px}.activity-options{gap:6px}.answer-option{font-size:16px}.learning-top h2{font-size:17px}.star-count{font-size:12px;padding:8px}}
+\n</style>
 </head>
 <body>
 <div class="app">
 <header><div class="brand"><div class="logo" aria-hidden="true">🎨</div><div><h1>دنیای رنگی من</h1><p>هر خانه، یک رنگ؛ هر رنگ، یک لبخند!</p></div></div><div class="saved" id="saveStatus" aria-live="polite">✨ آماده‌ی بازی</div></header>
 <section class="hero"><h2>بیا با هم یک تصویر رنگی بسازیم! 🧸</h2><p>یک شکل را انتخاب کن، رنگ دلخواهت را بردار و روی خانه‌ها بزن. لازم نیست عجله کنی؛ نقاشی تو همین‌جا ذخیره می‌شود.</p></section>
-<div class="layout">
+
+<section class="learning" aria-labelledby="learnTitle">
+ <div class="learning-top"><div><h2 id="learnTitle">🚀 ماموریت‌های یادگیری</h2><p>هر روز چند دقیقه بازی کن؛ قدم‌به‌قدم تمرین کن و ستاره بگیر.</p></div><div class="star-count" id="starCount" aria-live="polite">⭐ ۰ ستاره</div></div>
+ <div class="activity-tabs" role="group" aria-label="انتخاب بازی آموزشی">
+  <button class="activity-tab active" data-activity="letters"><span>🔤</span>حرف‌ها و کلمه‌ها</button>
+  <button class="activity-tab" data-activity="count"><span>🔢</span>عددشماری</button>
+  <button class="activity-tab" data-activity="math"><span>➕</span>جمع و تفریق</button>
+  <button class="activity-tab" data-activity="pattern"><span>🧩</span>الگوها و دقت</button>
+ </div>
+ <div class="activity-box">
+  <div class="activity-meta"><span id="activityName">فارسی: حرف اول</span><span id="roundText">تمرین ۱</span></div>
+  <div class="activity-question" id="activityQuestion">کلمه را نگاه کن. با چه حرفی شروع می‌شود؟</div>
+  <div class="activity-visual" id="activityVisual" aria-hidden="true">🍎</div>
+  <div class="activity-options" id="activityOptions"></div>
+  <div class="activity-feedback" id="activityFeedback" aria-live="polite">یکی از جواب‌ها را انتخاب کن.</div>
+  <div class="activity-actions"><button class="secondary" id="speakBtn">🔊 شنیدن دستور</button><button class="primary" id="nextActivityBtn" disabled>تمرین بعدی ←</button></div>
+ </div>
+ <div class="learning-foot">این بازی برای تمرین مقدماتی طراحی شده است؛ جایگزین کتاب درسی یا آموزش معلم نیست. پاسخ‌ها روی همین گوشی ذخیره می‌شوند.</div>
+</section>
+\n<div class="layout">
 <main class="panel canvas-panel">
 <div class="section-head"><h3>۱. یک الگو انتخاب کن</h3><span class="small-note">لمس کن تا انتخاب شود</span></div>
 <div class="templates" id="templates">
@@ -159,7 +197,68 @@ $('checkBtn').addEventListener('click',()=>{
 });
 $('surpriseBtn').addEventListener('click',()=>{const c=colors[Math.floor(Math.random()*colors.length)][0];chooseColor(c);$('saveStatus').textContent='🎉 رنگ تازه انتخاب شد!'});
 document.querySelectorAll('#sizes button').forEach(b=>b.addEventListener('click',()=>{size=Number(b.dataset.size);document.querySelectorAll('#sizes button').forEach(x=>x.classList.toggle('active',x===b));history=[];buildBoard(false)}));
-const old=loadSaved();if(old&&Number.isInteger(old.size)&&[8,10,12].includes(old.size)){size=old.size;if(old.pattern&&['heart','flower','fish','house','butterfly','rocket','apple','free'].includes(old.pattern))pattern=old.pattern;document.querySelectorAll('#sizes button').forEach(b=>b.classList.toggle('active',Number(b.dataset.size)===size));document.querySelectorAll('.template').forEach(b=>b.classList.toggle('active',b.dataset.pattern===pattern));}
+
+/* Learning activities: Persian letters, number sense, early arithmetic and patterns. */
+const activityData={
+ letters:[
+  {q:'کلمه با چه حرفی شروع می‌شود؟',visual:'🍎 سیب',options:['س','م','ب'],answer:'س',explain:'آفرین! سیب با حرف «س» شروع می‌شود.'},
+  {q:'کلمه با چه حرفی شروع می‌شود؟',visual:'🌙 ماه',options:['خ','م','گ'],answer:'م',explain:'درست است؛ ماه با «م» شروع می‌شود.'},
+  {q:'کلمه با چه حرفی شروع می‌شود؟',visual:'🌹 گل',options:['گ','آ','ن'],answer:'گ',explain:'عالی! گل با «گ» شروع می‌شود.'},
+  {q:'کلمه با چه حرفی شروع می‌شود؟',visual:'🏠 خانه',options:['خ','د','س'],answer:'خ',explain:'درست است؛ خانه با «خ» شروع می‌شود.'},
+  {q:'کلمه با چه حرفی شروع می‌شود؟',visual:'💧 آب',options:['ا','ب','م'],answer:'ا',explain:'آفرین! آب با صدای آغازین «آ» نوشته می‌شود.'},
+  {q:'کلمه با چه حرفی شروع می‌شود؟',visual:'🍌 موز',options:['ز','م','و'],answer:'م',explain:'درست است؛ موز با «م» شروع می‌شود.'}
+ ],
+ count:[
+  {q:'چند تا ستاره می‌بینی؟',visual:'⭐ ⭐ ⭐',options:['۲','۳','۴'],answer:'۳',explain:'بیا بشماریم: یک، دو، سه؛ پس جواب ۳ است.'},
+  {q:'چند تا سیب می‌بینی؟',visual:'🍎 🍎 🍎 🍎',options:['۳','۵','۴'],answer:'۴',explain:'چهار سیب داریم. یکی‌یکی شمردیم.'},
+  {q:'چند تا ماهی می‌بینی؟',visual:'🐟 🐟',options:['۱','۲','۳'],answer:'۲',explain:'درست است؛ دو ماهی داریم.'},
+  {q:'چند تا گل می‌بینی؟',visual:'🌼 🌼 🌼 🌼 🌼',options:['۵','۴','۶'],answer:'۵',explain:'آفرین! پنج گل را شمردی.'},
+  {q:'چند تا توپ می‌بینی؟',visual:'⚽ ⚽ ⚽ ⚽ ⚽ ⚽',options:['۶','۵','۷'],answer:'۶',explain:'درست است؛ شش توپ داریم.'},
+  {q:'چند تا قلب می‌بینی؟',visual:'❤️ ❤️ ❤️ ❤️',options:['۲','۴','۳'],answer:'۴',explain:'چهار قلب؛ عالی شمردی!'}
+ ],
+ math:[
+  {q:'۲ + ۱ چند می‌شود؟',visual:'🍓 🍓  +  🍓',options:['۲','۳','۴'],answer:'۳',explain:'دو توت داریم و یکی دیگر اضافه می‌کنیم؛ می‌شود سه.'},
+  {q:'۳ + ۲ چند می‌شود؟',visual:'🐞 🐞 🐞  +  🐞 🐞',options:['۴','۵','۶'],answer:'۵',explain:'سه تا را با دو تای دیگر می‌شماریم: چهار، پنج.'},
+  {q:'۴ − ۱ چند می‌شود؟',visual:'🎈 🎈 🎈 🎈  →  🎈',options:['۲','۳','۴'],answer:'۳',explain:'از چهار بادکنک یکی را کم کنیم، سه تا می‌ماند.'},
+  {q:'۵ − ۲ چند می‌شود؟',visual:'🍪 🍪 🍪 🍪 🍪',options:['۲','۳','۴'],answer:'۳',explain:'پنج شیرینی داریم؛ دو تا را کنار می‌گذاریم، سه تا می‌ماند.'},
+  {q:'۱ + ۳ چند می‌شود؟',visual:'🧸 + 🧸 🧸 🧸',options:['۳','۴','۵'],answer:'۴',explain:'یک عروسک به‌اضافه سه عروسک می‌شود چهار.'},
+  {q:'۶ − ۲ چند می‌شود؟',visual:'🐠 🐠 🐠 🐠 🐠 🐠',options:['۳','۴','۵'],answer:'۴',explain:'شش ماهی بود؛ دو تا کم شد و چهار تا ماند.'}
+ ],
+ pattern:[
+  {q:'جای خالی را پیدا کن. بعد از چه چیزی می‌آید؟',visual:'🔴 🔵 🔴 🔵 ❓',options:['🔴','🔵','🟢'],answer:'🔴',explain:'قرمز و آبی یکی‌درمیان تکرار می‌شوند؛ بعدی قرمز است.'},
+  {q:'الگو را ادامه بده.',visual:'🐱 🐶 🐱 🐶 ❓',options:['🐱','🐶','🐰'],answer:'🐱',explain:'گربه، سگ، گربه، سگ؛ پس بعدی گربه است.'},
+  {q:'کدام شکل بعدی است؟',visual:'⭐ ⭐ 🌙 ⭐ ⭐ ❓',options:['🌙','⭐','☀️'],answer:'🌙',explain:'دو ستاره و یک ماه تکرار می‌شود؛ پس ماه می‌آید.'},
+  {q:'الگو را کامل کن.',visual:'🍎 🍎 🍐 🍎 🍎 ❓',options:['🍎','🍐','🍌'],answer:'🍐',explain:'دو سیب و یک گلابی تکرار می‌شود؛ بعدی گلابی است.'},
+  {q:'به ترتیب رنگ‌ها دقت کن.',visual:'🟡 🟢 🟡 🟢 ❓',options:['🟢','🟡','🔵'],answer:'🟡',explain:'زرد و سبز یکی‌درمیان می‌آیند؛ بعدی زرد است.'},
+  {q:'چه چیزی جای خالی را پر می‌کند؟',visual:'🔺 🔵 🔺 🔵 ❓',options:['🔺','🔵','🟦'],answer:'🔺',explain:'مثلث و دایره یکی‌درمیان تکرار می‌شوند؛ بعدی مثلث است.'}
+ ]
+};
+let activeActivity='letters', activityIndex=0, activityAnswered=false;
+let learningProgress={stars:0,done:0};
+try{learningProgress=Object.assign(learningProgress,JSON.parse(localStorage.getItem('kidsLearningProgress.v1')||'{}'))}catch(e){}
+function shuffleOptions(arr){return arr.slice().sort(()=>Math.random()-.5)}
+function saveLearning(){try{localStorage.setItem('kidsLearningProgress.v1',JSON.stringify(learningProgress))}catch(e){} $('starCount').textContent='⭐ '+Number(learningProgress.stars||0).toLocaleString('fa-IR')+' ستاره'}
+function renderActivity(){
+ const list=activityData[activeActivity];activityIndex=activityIndex%list.length;activityAnswered=false;
+ const item=list[activityIndex];$('activityName').textContent=({letters:'فارسی: حرف و کلمه',count:'ریاضی: عددشماری',math:'ریاضی: جمع و تفریق',pattern:'دقت: الگوها'})[activeActivity];
+ $('roundText').textContent='تمرین '+(activityIndex+1).toLocaleString('fa-IR')+' از '+list.length.toLocaleString('fa-IR');
+ $('activityQuestion').textContent=item.q;$('activityVisual').textContent=item.visual;$('activityFeedback').textContent='با دقت نگاه کن و جواب درست را انتخاب کن.';$('nextActivityBtn').disabled=true;
+ const wrap=$('activityOptions');wrap.innerHTML='';
+ shuffleOptions(item.options).forEach(option=>{const b=document.createElement('button');b.className='answer-option';b.textContent=option;b.addEventListener('click',()=>answerActivity(b,option,item));wrap.appendChild(b)});
+}
+function answerActivity(button,option,item){
+ if(activityAnswered)return;activityAnswered=true;
+ const correct=option===item.answer;
+ Array.from($('activityOptions').children).forEach(b=>{b.disabled=true;if(b.textContent===item.answer)b.classList.add('correct');else if(b===button&&!correct)b.classList.add('incorrect')});
+ if(correct){learningProgress.stars=Number(learningProgress.stars||0)+1;learningProgress.done=Number(learningProgress.done||0)+1;$('activityFeedback').textContent=item.explain+' ⭐ یک ستاره گرفتی!';}
+ else{$('activityFeedback').textContent='اشکالی ندارد؛ جواب درست «'+item.answer+'» است. '+item.explain;}
+ saveLearning();$('nextActivityBtn').disabled=false;
+}
+document.querySelectorAll('.activity-tab').forEach(b=>b.addEventListener('click',()=>{activeActivity=b.dataset.activity;document.querySelectorAll('.activity-tab').forEach(x=>x.classList.toggle('active',x===b));activityIndex=0;renderActivity()}));
+$('nextActivityBtn').addEventListener('click',()=>{activityIndex=(activityIndex+1)%activityData[activeActivity].length;renderActivity()});
+$('speakBtn').addEventListener('click',()=>{const textToSay=$('activityQuestion').textContent+' '+$('activityVisual').textContent; if('speechSynthesis' in window){try{window.speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(textToSay);utterance.lang='fa-IR';utterance.rate=.82;window.speechSynthesis.speak(utterance);$('activityFeedback').textContent='دستور با صدای دستگاه پخش می‌شود؛ اگر صدایی نشنیدی، از متن کمک بگیر.'}catch(e){$('activityFeedback').textContent='خواندن صوتی در این دستگاه پشتیبانی نمی‌شود؛ دستور روی صفحه است.'}}else{$('activityFeedback').textContent='خواندن صوتی در این دستگاه پشتیبانی نمی‌شود؛ دستور روی صفحه است.'}});
+saveLearning();renderActivity();
+\nconst old=loadSaved();if(old&&Number.isInteger(old.size)&&[8,10,12].includes(old.size)){size=old.size;if(old.pattern&&['heart','flower','fish','house','butterfly','rocket','apple','free'].includes(old.pattern))pattern=old.pattern;document.querySelectorAll('#sizes button').forEach(b=>b.classList.toggle('active',Number(b.dataset.size)===size));document.querySelectorAll('.template').forEach(b=>b.classList.toggle('active',b.dataset.pattern===pattern));}
 chooseColor(selected);buildBoard(true);
 })();
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) { window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {})); }
