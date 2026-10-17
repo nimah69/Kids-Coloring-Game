@@ -1,0 +1,20 @@
+{
+  "name": "پری و دنیای جادویی",
+  "short_name": "پری جادویی",
+  "description": "هشت بازی آموزشی فارسی برای کودکان ۳ تا ۷ سال",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fff0f7",
+  "theme_color": "#fff0f7",
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
