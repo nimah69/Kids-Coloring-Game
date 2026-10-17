@@ -259,7 +259,7 @@ function answerActivity(button,option,item){
  if(activityAnswered)return;activityAnswered=true;
  const correct=option===item.answer;
  Array.from($('activityOptions').children).forEach(b=>{b.disabled=true;if(b.textContent===item.answer)b.classList.add('correct');else if(b===button&&!correct)b.classList.add('incorrect')});
- if(correct){learningProgress.stars=Number(learningProgress.stars||0)+1;learningProgress.done=Number(learningProgress.done||0)+1;$('activityFeedback').textContent=item.explain+' ⭐ یک ستاره گرفتی!';}
+ if(correct){learningProgress.stars=Number(learningProgress.stars||0)+1;learningProgress.done=Number(learningProgress.done||0)+1;$('activityFeedback').textContent=item.explain+' ⭐ یک ستاره گرفتی!'+(skill.level>1&&skill.streak===0?' سطح بعدی فعال شد؛ آفرین!':'');}
  else{$('activityFeedback').textContent='اشکالی ندارد؛ جواب درست «'+item.answer+'» است. '+item.explain;}
  saveLearning();$('nextActivityBtn').disabled=false;
 }
