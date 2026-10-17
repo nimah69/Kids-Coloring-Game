@@ -19,6 +19,7 @@ assert.ok(!html.includes('\\n<section class="guide-panel"'), 'Raw \\n before gui
 assert.ok(!css.includes('\\n.guide-panel'), 'Raw \\n before guide CSS');
 assert.ok(js.includes('kidsColoringGame.v2:') && js.includes('migrateLegacyDrawing'), 'Versioned drawing storage and migration required');
 assert.ok(js.includes('pointerdown') && js.includes('pointermove') && js.includes('pointerup'), 'Pointer painting required');
+assert.ok(js.includes('getVoices()') && js.includes('startsWith(\'fa\')') && js.includes('Extended_Pictographic'), 'Persian voice detection and emoji cleanup required');
 assert.ok(js.includes('kidsLearningProgress.v2:') && js.includes('kidsColoringProfile.v1'), 'Independent child profiles required');
 assert.ok(js.includes("toLocaleString('fa-IR')"), 'Persian number formatting required');
 assert.ok(js.includes('function shuffleOptions(arr){const out=arr.slice();for('), 'Fisher-Yates shuffle required');
@@ -57,4 +58,6 @@ const mathFunction = js.match(/function makeLevelQuestion\([\s\S]*?\nfunction re
 assert.ok(mathFunction && !/options=[^;]*\.map\(String\)/.test(mathFunction[0]), 'Generated number options should use Persian formatting');
 assert.ok(html.includes('Content-Security-Policy'), 'CSP meta tag required');
 assert.ok(css.includes('font-family:"Vazirmatn"'), 'Vazirmatn font family should be configured');
+const fontSizes = [...css.matchAll(/font-size:(\\d+(?:\\.\\d+)?)px/g)].map(match => Number(match[1]));
+assert.ok(fontSizes.every(size => size >= 12), 'All explicit font sizes must be at least 12px');
 console.log('Quality checks passed: JavaScript syntax, a11y elements, storage migration, pointer painting, 3 symmetric patterns, 75+ questions, PWA assets, and CSP.');
