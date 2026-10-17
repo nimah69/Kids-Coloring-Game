@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kids-coloring-game-v6';
+const CACHE_NAME = 'kids-coloring-game-v7';
 const APP_FILES = ['./', './index.html', './style.css', './app.js', './manifest.webmanifest', './favicon.svg', './apple-touch-icon.svg', './icon-maskable.svg'];
 
 self.addEventListener('install', event => {
@@ -24,7 +24,10 @@ self.addEventListener('fetch', event => {
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
         }
         return response;
-      }).catch(() => caches.match('./index.html'));
+      }).catch(error => {
+        if (event.request.mode === 'navigate') return caches.match('./index.html');
+        throw error;
+      });
     })
   );
 });
