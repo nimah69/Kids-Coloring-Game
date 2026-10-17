@@ -64,7 +64,7 @@ footer{text-align:center;font-size:11px;color:#9296a3;margin-top:18px}
 'use strict';
 const colors=[['#ff5d73','قرمز'],['#ff914d','نارنجی'],['#ffd166','زرد'],['#70d6a3','سبز'],['#4ecdc4','فیروزه‌ای'],['#65a9ff','آبی'],['#8b7bff','بنفش'],['#ff8fc7','صورتی'],['#a66b45','قهوه‌ای'],['#29334a','سرمه‌ای'],['#ffffff','سفید'],['#b8c0cc','خاکستری']];
 const $=id=>document.getElementById(id), board=$('board');
-let size=8, pattern='heart', selected=colors[0][0], erasing=false, cells=[], history=[];
+let size=8, pattern='heart', selected=colors[0][0], erasing=false, cells=[], history=[], currentMask=[];
 const key='kidsColoringGame.v1';
 const patterns={
 heart:['..XX..XX.','XXXXXXXXX','.XXXXXXX.','..XXXXX..','...XXX...','....X....'],
@@ -87,16 +87,17 @@ function makeMask(name,n){
  }
  return mask;
 }
+function baseColor(i){return pattern==='free'||currentMask[i]?'#ffffff':'#fff0df'}
+function baseBorder(i){return pattern==='free'||currentMask[i]?'#e9e5df':'#f5e5d2'}
 function buildBoard(restore){
  size=Number(size);board.innerHTML='';board.className='board'+(size===10?' grid-10':size===12?' grid-12':'');
- const mask=makeMask(pattern,size), stored=restore?loadSaved():null;
+ const mask=makeMask(pattern,size), stored=restore?loadSaved():null;currentMask=mask;
  cells=Array(size*size).fill('#ffffff');
  if(stored&&stored.size===size&&stored.pattern===pattern&&stored.cells.length===cells.length)cells=stored.cells;
  for(let i=0;i<size*size;i++){
   const b=document.createElement('button');b.type='button';b.className='cell';b.dataset.i=i;
   b.setAttribute('aria-label','خانه '+(i+1)+(mask[i]?' از الگوی شکل':''));
-  if(!mask[i]&&pattern!=='free')b.style.backgroundColor='#fff8ed';
-  b.style.backgroundColor=cells[i];if(cells[i]!=='#ffffff')b.style.borderColor='#ffffff';
+  b.style.backgroundColor=cells[i]!=='#ffffff'?cells[i]:baseColor(i);b.style.borderColor=cells[i]!=='#ffffff'?'#ffffff':baseBorder(i);
   b.addEventListener('click',()=>paint(i));board.appendChild(b);
  }
  updateStats();save(false);
@@ -104,7 +105,7 @@ function buildBoard(restore){
 function paint(i){
  const next=erasing?'#ffffff':selected, old=cells[i];if(old===next)return;
  history.push({i,old});if(history.length>100)history.shift();
- cells[i]=next;const el=board.children[i];el.style.backgroundColor=next;el.style.borderColor=next==='#ffffff'?'#e9e5df':'#ffffff';
+ cells[i]=next;const el=board.children[i];el.style.backgroundColor=next==='#ffffff'?baseColor(i):next;el.style.borderColor=next==='#ffffff'?baseBorder(i):'#ffffff';
  updateStats();save(true);
 }
 function updateStats(){
@@ -126,8 +127,8 @@ colors.forEach((c,i)=>{const b=document.createElement('button');b.className='swa
 document.querySelectorAll('.template').forEach(b=>b.addEventListener('click',()=>setPattern(b.dataset.pattern)));
 $('paintTool').addEventListener('click',()=>{erasing=false;$('paintTool').classList.add('active');$('eraserTool').classList.remove('active')});
 $('eraserTool').addEventListener('click',()=>{erasing=true;$('eraserTool').classList.add('active');$('paintTool').classList.remove('active')});
-$('undoBtn').addEventListener('click',()=>{const last=history.pop();if(!last)return;cells[last.i]=last.old;const el=board.children[last.i];el.style.backgroundColor=last.old;el.style.borderColor=last.old==='#ffffff'?'#e9e5df':'#ffffff';updateStats();save(true)});
-$('resetBtn').addEventListener('click',()=>{if(!confirm('همه‌ی رنگ‌ها پاک شوند؟'))return;history=[];cells=Array(size*size).fill('#ffffff');Array.from(board.children).forEach((el,i)=>{el.style.backgroundColor='#ffffff';el.style.borderColor='#e9e5df'});updateStats();save(true)});
+$('undoBtn').addEventListener('click',()=>{const last=history.pop();if(!last)return;cells[last.i]=last.old;const el=board.children[last.i];el.style.backgroundColor=last.old==='#ffffff'?baseColor(last.i):last.old;el.style.borderColor=last.old==='#ffffff'?baseBorder(last.i):'#ffffff';updateStats();save(true)});
+$('resetBtn').addEventListener('click',()=>{if(!confirm('همه‌ی رنگ‌ها پاک شوند؟'))return;history=[];cells=Array(size*size).fill('#ffffff');Array.from(board.children).forEach((el,i)=>{el.style.backgroundColor=baseColor(i);el.style.borderColor=baseBorder(i)});updateStats();save(true)});
 $('surpriseBtn').addEventListener('click',()=>{const c=colors[Math.floor(Math.random()*colors.length)][0];chooseColor(c);$('saveStatus').textContent='🎉 رنگ تازه انتخاب شد!'});
 document.querySelectorAll('#sizes button').forEach(b=>b.addEventListener('click',()=>{size=Number(b.dataset.size);document.querySelectorAll('#sizes button').forEach(x=>x.classList.toggle('active',x===b));history=[];buildBoard(false)}));
 const old=loadSaved();if(old&&Number.isInteger(old.size)&&[8,10,12].includes(old.size)){size=old.size;if(old.pattern&&['heart','flower','fish','house','butterfly','rocket','apple','free'].includes(old.pattern))pattern=old.pattern;document.querySelectorAll('#sizes button').forEach(b=>b.classList.toggle('active',Number(b.dataset.size)===size));document.querySelectorAll('.template').forEach(b=>b.classList.toggle('active',b.dataset.pattern===pattern));}
