@@ -18,7 +18,9 @@ assert.ok(html.includes('href="./style.css"') && html.includes('src="./app.js"')
 assert.ok(!html.includes('\\n<section class="guide-panel"'), 'Raw \\n before guide panel');
 assert.ok(!css.includes('\\n.guide-panel'), 'Raw \\n before guide CSS');
 assert.ok(js.includes('kidsColoringGame.v2:') && js.includes('migrateLegacyDrawing'), 'Versioned drawing storage and migration required');
-assert.ok(js.includes('pointerdown') && js.includes('pointermove') && js.includes('pointerup'), 'Pointer painting required');
+assert.ok(js.includes('pointerdown') && js.includes('pointermove') && js.includes('pointerup') && js.includes('pointercancel') && js.includes('lostpointercapture'), 'Pointer painting and cancellation handling required');
+assert.match(js,/if\(!currentMask\[i\]\)continue/, 'Drawing score must count only cells inside the shape');
+assert.ok(!js.includes("v<.5?'#b8a1ff'"), 'Pattern target colors must exist in the palette');
 assert.ok(js.includes('getVoices()') && js.includes("startsWith('fa')") && js.includes('Extended_Pictographic'), 'Persian voice detection and emoji cleanup required');
 assert.ok(js.includes('kidsLearningProgress.v2:') && js.includes('kidsColoringProfile.v1'), 'Independent child profiles required');
 assert.ok(js.includes("toLocaleString('fa-IR')"), 'Persian number formatting required');
@@ -48,6 +50,7 @@ assert.deepEqual(Object.keys(bank).sort(), ['count', 'letters', 'math', 'pattern
 let total = 0;
 for (const [skill, questions] of Object.entries(bank)) {
   assert.ok(questions.length >= 15, skill + ': expected at least 15 questions');
+  if(skill==='pattern'||skill==='shapes')assert.equal(new Set(questions.map(q=>q.visual)).size,questions.length,skill+': repeated visuals');
   for (const question of questions) {
     total++;
     assert.ok(question.options.includes(question.answer), skill + ': answer must be in options');
@@ -57,6 +60,8 @@ for (const [skill, questions] of Object.entries(bank)) {
 const mathFunction = js.match(/function makeLevelQuestion\([\s\S]*?\nfunction renderActivity/);
 assert.ok(mathFunction && !/options=[^;]*\.map\(String\)/.test(mathFunction[0]), 'Generated number options should use Persian formatting');
 assert.ok(html.includes('Content-Security-Policy'), 'CSP meta tag required');
+assert.equal((html.match(/id="sampleBoard"[^>]*aria-label=/g)||[]).length,1,'sample board must have one aria-label');
+assert.equal((html.match(/id="board"[^>]*aria-label=/g)||[]).length,1,'drawing board must have one aria-label');
 assert.ok(css.includes('font-family:"Vazirmatn"'), 'Vazirmatn font family should be configured');
 const fontSizes = [...css.matchAll(/font-size:([0-9]+([.][0-9]+)?)px/g)].map(match => Number(match[1]));
 assert.ok(fontSizes.every(size => size >= 12), 'All explicit font sizes must be at least 12px');

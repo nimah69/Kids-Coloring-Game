@@ -33,3 +33,11 @@ assert.match(read('js/games/treasure.js'),/b\.onclick=\(\)=>/,'treasure must sup
 assert.match(read('js/games/piano.js'),/function play\(sequence\)/,'piano must play note sequences');
 assert.match(coloringApp,/cells=Array\(size\*size\)\.fill\(null\)/,'reset must clear cells as unpainted');
 console.log('Peri quality checks passed.');
+
+assert.match(read('js/games/clouds.js'),/n-2\*step/,'clouds should show three terms of the same sequence');
+assert.match(read('js/games/frog.js'),/distractorPool=.*filter\(x=>x!==a&&x!==b\)/s,'frog options must be distinct');
+assert.match(read('js/games/piano.js'),/length=lv===1\?1/,'piano level one should be simplified');
+assert.match(read('js/core.js'),/audio\.state==='suspended'\)audio\.resume\(\)/,'audio context should resume after user interaction');
+assert.match(read('js/games/treasure.js'),/if\(!mistakeRecorded\)/,'treasure should not lower level repeatedly from one round');
+assert.match(read('js/games/letters.js'),/lv<3\?LETTERS\.filter/,'early letter levels should avoid confusing alif variants');
+assert.match(read('js/app.js'),/if\(!restDue\(\)\|\|restPrompted\)return/,'rest reminder must not interrupt an active game');
