@@ -1,0 +1,18 @@
+const KEY='peri.v1';const fresh=()=>({stars:0,age:0,snd:true,lv:{},st:{}});let state=fresh();let audio;
+export function load(){try{const x=JSON.parse(localStorage.getItem(KEY)||'null');if(x&&typeof x==='object')state={...fresh(),...x,lv:x.lv||{},st:x.st||{}}}catch{state=fresh()}return state}
+export function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}}
+export const getState=()=>state;
+export function setAge(age){state.age=age;save()}
+export function setSound(snd){state.snd=snd;save()}
+export function level(game){return Math.max(1,Math.min(3,Number(state.lv[game]||state.age||1)))}
+export function setLevel(game,n){state.lv[game]=Math.max(1,Math.min(3,n));save()}
+export function record(game,correct){const s=state.st[game]||[0,0];s[correct?0:1]++;state.st[game]=s;state._run=state._run||{};state._run[game]=state._run[game]||{good:0,bad:0};const r=state._run[game];if(correct){r.good++;r.bad=0;if(r.good>=3){setLevel(game,level(game)+1);r.good=0}}else{r.bad++;r.good=0;if(r.bad>=3){setLevel(game,level(game)-1);r.bad=0}}save()}
+const stages=[{n:0,e:'🌱',name:'جوانه‌ی پری',next:4},{n:4,e:'🦋',name:'پروانه‌ی بالدار',next:10},{n:10,e:'🧚',name:'پری کوچولو',next:20},{n:20,e:'🧚‍♀️',name:'پری جادوگر',next:35},{n:35,e:'👸',name:'ملکه‌ی پری‌ها',next:35}];
+export function stage(){return [...stages].reverse().find(x=>state.stars>=x.n)||stages[0]}
+export function addStar(){const before=stage();state.stars++;save();const after=stage();if(after.n>before.n){fireworks(18);return {evolved:true,stage:after}}fireworks(5);beep(660);return {evolved:false,stage:after}}
+export function beep(freq=523){if(!state.snd)return;try{audio=audio||new (window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=freq;o.type='sine';g.gain.value=.08;o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+.16)}catch{}}
+export function speak(text){if(!state.snd||!('speechSynthesis'in window))return;try{const clean=text.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu,' ').trim();speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(clean);u.lang='fa-IR';u.rate=.8;const voices=speechSynthesis.getVoices();const faVoice=voices.find(v=>v.lang.toLowerCase().startsWith('fa'));if(faVoice)u.voice=faVoice;speechSynthesis.speak(u)}catch{}}
+export function fireworks(n=8){const layer=document.createElement('div');layer.className='fireworks';layer.setAttribute('aria-hidden','true');layer.textContent=Array.from({length:n},()=>['🧚','✨','🦋','💖','🌸'][Math.floor(Math.random()*5)]).join(' ');Object.assign(layer.style,{position:'fixed',inset:'15% 0 auto',textAlign:'center',fontSize:n>10?'32px':'22px',pointerEvents:'none',zIndex:99});document.body.append(layer);setTimeout(()=>layer.remove(),1100)}
+export function reset(){state=fresh();save()}
+export function renderHeader(){const s=stage();document.querySelector('#fairy').textContent=s.e;document.querySelector('#stageName').textContent=s.name;document.querySelector('#starCount').textContent=state.stars.toLocaleString('fa-IR');const prev=s.n,next=s.next;const p=document.querySelector('#growthBar');p.max=Math.max(1,next-prev);p.value=Math.max(0,state.stars-prev);document.querySelector('#soundBtn').textContent=state.snd?'🔊':'🔇'}
+let start=Date.now();export function restDue(){return Date.now()-start>12*60*1000}export function resetRestClock(){start=Date.now()}
