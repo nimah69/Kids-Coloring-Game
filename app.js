@@ -81,13 +81,13 @@ function setPattern(name){
  history=[];buildBoard(true);if(typeof updateGuide==='function')updateGuide();
 }
 function chooseColor(hex){
- selected=hex;erasing=false;$('paintTool').classList.add('active');$('eraserTool').classList.remove('active');
- document.querySelectorAll('.swatch').forEach(b=>b.classList.toggle('selected',b.dataset.color===hex));
+ selected=hex;erasing=false;$('paintTool').classList.add('active');$('eraserTool').classList.remove('active');$('paintTool').setAttribute('aria-pressed','true');$('eraserTool').setAttribute('aria-pressed','false');
+ document.querySelectorAll('.swatch').forEach(b=>{b.classList.toggle('selected',b.dataset.color===hex);b.setAttribute('aria-pressed',String(b.dataset.color===hex))});
 }
-colors.forEach((c,i)=>{const b=document.createElement('button');b.className='swatch'+(i===10?' light':'');b.style.backgroundColor=c[0];b.dataset.color=c[0];b.title=c[1];b.setAttribute('aria-label','رنگ '+c[1]);b.addEventListener('click',()=>chooseColor(c[0]));$('palette').appendChild(b)});
+colors.forEach((c,i)=>{const b=document.createElement('button');b.className='swatch'+(i===10?' light':'');b.setAttribute('aria-pressed',String(i===0));b.style.backgroundColor=c[0];b.dataset.color=c[0];b.title=c[1];b.setAttribute('aria-label','رنگ '+c[1]);b.addEventListener('click',()=>chooseColor(c[0]));$('palette').appendChild(b)});
 document.querySelectorAll('.template').forEach(b=>b.addEventListener('click',()=>setPattern(b.dataset.pattern)));
 $('paintTool').addEventListener('click',()=>{erasing=false;$('paintTool').classList.add('active');$('eraserTool').classList.remove('active')});
-$('eraserTool').addEventListener('click',()=>{erasing=true;$('eraserTool').classList.add('active');$('paintTool').classList.remove('active')});
+$('eraserTool').addEventListener('click',()=>{erasing=true;$('eraserTool').classList.add('active');$('paintTool').classList.remove('active');$('eraserTool').setAttribute('aria-pressed','true');$('paintTool').setAttribute('aria-pressed','false')});
 $('undoBtn').addEventListener('click',()=>{const group=history.pop();if(!group)return;group.forEach(last=>{cells[last.i]=last.old;const el=board.children[last.i];el.style.backgroundColor=last.old===null?baseColor(last.i):last.old;el.style.borderColor=last.old===null?baseBorder(last.i):'#ffffff';el.setAttribute('aria-label',cellLabel(last.i))});updateStats();save(true)});
 $('resetBtn').addEventListener('click',()=>{if(!confirm('همه‌ی رنگ‌ها پاک شوند؟'))return;history=[];cells=Array(size*size).fill('#ffffff');Array.from(board.children).forEach((el,i)=>{el.style.backgroundColor=baseColor(i);el.style.borderColor=baseBorder(i)});updateStats();save(true)});
 $('checkBtn').addEventListener('click',()=>{
