@@ -14,6 +14,7 @@ assert.equal(count(block('LETTERS','FRUITS')), 30, 'expected 30 letters');
 assert.equal(count(block('FRUITS','COLORS')), 17, 'expected 17 fruits');
 assert.equal(count(block('COLORS','SHAPES')), 17, 'expected 17 colors');
 const app = read('js/app.js');
+const coloringApp = read('../app.js');
 for (const g of ['cafe','letters','clouds','frog','piano','treasure','shapes','colors']) assert.ok(app.includes("['"+g+"'"), 'game not registered: '+g);
 const quiz = read('js/quiz.js');
 assert.match(quiz,/if\(solved\|\|tried\.has\(i\)\|\|b\.disabled\)return/,'answers must be locked after a solved question');
