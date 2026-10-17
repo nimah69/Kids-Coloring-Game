@@ -5,7 +5,7 @@ const colors=[['#ff5d73','قرمز'],['#ff914d','نارنجی'],['#ffd166','زر
 const $=id=>document.getElementById(id), board=$('board');
 let size=8, pattern='heart', selected=colors[0][0], erasing=false, cells=[], history=[], currentMask=[], targetColors=[];
 const legacyKey='kidsColoringGame.v1';const storageKey=(p=pattern,n=size)=>'kidsColoringGame.v2:'+p+':'+n;
-function migrateLegacyDrawing(){try{const old=JSON.parse(localStorage.getItem(legacyKey)||'null');if(old&&Array.isArray(old.cells)){const p=old.pattern||'heart',n=[8,10,12].includes(old.size)?old.size:8,k=storageKey(p,n);if(!localStorage.getItem(k)){old.cells=old.cells.map(c=>c==='#ffffff'?null:c);localStorage.setItem(k,JSON.stringify(old));}localStorage.removeItem(legacyKey)}}catch(e){}}
+function migrateLegacyDrawing(){try{const old=JSON.parse(localStorage.getItem(legacyKey)||'null');if(old&&Array.isArray(old.cells)){const p=old.pattern||'heart',n=[8,10,12].includes(old.size)?old.size:8,k=storageKey(p,n);pattern=p;size=n;if(!localStorage.getItem(k)){old.cells=old.cells.map(c=>c==='#ffffff'?null:c);localStorage.setItem(k,JSON.stringify(old));}localStorage.removeItem(legacyKey)}}catch(e){}}
 const patterns={
 heart:['..XX.XX..','.XXXXXXX.','XXXXXXXXX','.XXXXXXX.','..XXXXX..','...XXX...','....X....'],
 flower:['...X....','..XXX...','.XXXXX..','..XXX...','...X....','..XXX...','..X.X...'],
@@ -57,11 +57,17 @@ function buildBoard(restore){
  }
  updateStats();save(false);
 }
+let activeStroke=null, activePointer=null, lastPainted=-1;
 function paint(i){
  const next=erasing?null:selected, old=cells[i];if(old===next)return;
- history.push({i,old});if(history.length>100)history.shift();
+ const entry={i,old};
+ if(activeStroke)activeStroke.push(entry);else{history.push([entry]);if(history.length>100)history.shift();}
  cells[i]=next;const el=board.children[i];el.style.backgroundColor=next===null?baseColor(i):next;el.style.borderColor=next===null?baseBorder(i):'#ffffff';el.setAttribute('aria-label',cellLabel(i));updateStats();save(true);
 }
+function finishStroke(){if(activeStroke&&activeStroke.length){history.push(activeStroke);if(history.length>100)history.shift()}activeStroke=null;activePointer=null;lastPainted=-1}
+board.addEventListener('pointerdown',e=>{const cell=e.target.closest('#board .cell');if(!cell)return;e.preventDefault();activePointer=e.pointerId;activeStroke=[];lastPainted=Number(cell.dataset.i);board.setPointerCapture?.(e.pointerId);paint(lastPainted)});
+board.addEventListener('pointermove',e=>{if(activePointer!==e.pointerId)return;const cell=document.elementFromPoint(e.clientX,e.clientY)?.closest('#board .cell');if(!cell)return;const i=Number(cell.dataset.i);if(i!==lastPainted){lastPainted=i;paint(i)}});
+board.addEventListener('pointerup',finishStroke);board.addEventListener('pointercancel',finishStroke);
 function cellLabel(i){const row=Math.floor(i/size)+1,col=i%size+1,color=cells[i]===null?'رنگ‌نشده':(colors.find(c=>c[0]===cells[i])||[null,'سفید'])[1];return 'ردیف '+row.toLocaleString('fa-IR')+'، ستون '+col.toLocaleString('fa-IR')+'، رنگ '+color;}
 function updateStats(){
  const n=cells.filter(c=>c!==null&&c!=='#ffffff').length,p=Math.round(n/cells.length*100);
@@ -72,7 +78,7 @@ function save(show){try{localStorage.setItem(storageKey(),JSON.stringify({size,p
 function loadSaved(){try{return JSON.parse(localStorage.getItem(storageKey())||'null')}catch(e){return null}}
 function setPattern(name){
  pattern=name;document.querySelectorAll('.template').forEach(b=>b.classList.toggle('active',b.dataset.pattern===name));
- history=[];buildBoard(false);if(typeof updateGuide==='function')updateGuide();
+ history=[];buildBoard(true);if(typeof updateGuide==='function')updateGuide();
 }
 function chooseColor(hex){
  selected=hex;erasing=false;$('paintTool').classList.add('active');$('eraserTool').classList.remove('active');
@@ -82,7 +88,7 @@ colors.forEach((c,i)=>{const b=document.createElement('button');b.className='swa
 document.querySelectorAll('.template').forEach(b=>b.addEventListener('click',()=>setPattern(b.dataset.pattern)));
 $('paintTool').addEventListener('click',()=>{erasing=false;$('paintTool').classList.add('active');$('eraserTool').classList.remove('active')});
 $('eraserTool').addEventListener('click',()=>{erasing=true;$('eraserTool').classList.add('active');$('paintTool').classList.remove('active')});
-$('undoBtn').addEventListener('click',()=>{const last=history.pop();if(!last)return;cells[last.i]=last.old;const el=board.children[last.i];el.style.backgroundColor=last.old===null?baseColor(last.i):last.old;el.style.borderColor=last.old===null?baseBorder(last.i):'#ffffff';el.setAttribute('aria-label',cellLabel(last.i));updateStats();save(true)});
+$('undoBtn').addEventListener('click',()=>{const group=history.pop();if(!group)return;group.forEach(last=>{cells[last.i]=last.old;const el=board.children[last.i];el.style.backgroundColor=last.old===null?baseColor(last.i):last.old;el.style.borderColor=last.old===null?baseBorder(last.i):'#ffffff';el.setAttribute('aria-label',cellLabel(last.i))});updateStats();save(true)});
 $('resetBtn').addEventListener('click',()=>{if(!confirm('همه‌ی رنگ‌ها پاک شوند؟'))return;history=[];cells=Array(size*size).fill('#ffffff');Array.from(board.children).forEach((el,i)=>{el.style.backgroundColor=baseColor(i);el.style.borderColor=baseBorder(i)});updateStats();save(true)});
 $('checkBtn').addEventListener('click',()=>{
  if(pattern==='free'){$('checkResult').textContent='برای تمرین با الگوی رنگی، یکی از شکل‌ها را انتخاب کن.';return}
@@ -93,7 +99,7 @@ $('checkBtn').addEventListener('click',()=>{
  wrong.forEach(i=>{const el=board.children[i];el.style.outline='2px solid #ff8c42';el.style.outlineOffset='-2px'});setTimeout(()=>Array.from(board.children).forEach(el=>el.style.outline=''),1800);
 });
 $('surpriseBtn').addEventListener('click',()=>{const c=colors[Math.floor(Math.random()*colors.length)][0];chooseColor(c);$('saveStatus').textContent='🎉 رنگ تازه انتخاب شد!'});
-document.querySelectorAll('#sizes button').forEach(b=>b.addEventListener('click',()=>{size=Number(b.dataset.size);document.querySelectorAll('#sizes button').forEach(x=>x.classList.toggle('active',x===b));history=[];buildBoard(false);if(typeof updateGuide==='function')updateGuide()}));
+document.querySelectorAll('#sizes button').forEach(b=>b.addEventListener('click',()=>{size=Number(b.dataset.size);document.querySelectorAll('#sizes button').forEach(x=>x.classList.toggle('active',x===b));history=[];buildBoard(true);if(typeof updateGuide==='function')updateGuide()}));
 
 /* Learning activities: Persian letters, number sense, early arithmetic and patterns. */
 const activityData={
