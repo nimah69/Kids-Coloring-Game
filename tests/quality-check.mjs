@@ -58,6 +58,6 @@ const mathFunction = js.match(/function makeLevelQuestion\([\s\S]*?\nfunction re
 assert.ok(mathFunction && !/options=[^;]*\.map\(String\)/.test(mathFunction[0]), 'Generated number options should use Persian formatting');
 assert.ok(html.includes('Content-Security-Policy'), 'CSP meta tag required');
 assert.ok(css.includes('font-family:"Vazirmatn"'), 'Vazirmatn font family should be configured');
-const fontSizes = [...css.matchAll(/font-size:(\\d+(?:\\.\\d+)?)px/g)].map(match => Number(match[1]));
+const fontSizes = [...css.matchAll(/font-size:([0-9]+([.][0-9]+)?)px/g)].map(match => Number(match[1]));
 assert.ok(fontSizes.every(size => size >= 12), 'All explicit font sizes must be at least 12px');
 console.log('Quality checks passed: JavaScript syntax, a11y elements, storage migration, pointer painting, 3 symmetric patterns, 75+ questions, PWA assets, and CSP.');
