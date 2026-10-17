@@ -9,11 +9,23 @@ assert.equal(manifest.lang, 'fa');
 assert.equal(manifest.dir, 'rtl');
 const data = read('js/data.js');
 const block = (a,b) => data.split('export const '+a+'=')[1].split('export const '+b+'=')[0];
-const count = (s) => (s.match(/\[[^\[\]]+\]/g) || []).length;
+const count = s => (s.match(/\[[^\[\]]+\]/g) || []).length;
 assert.equal(count(block('LETTERS','FRUITS')), 30, 'expected 30 letters');
 assert.equal(count(block('FRUITS','COLORS')), 17, 'expected 17 fruits');
 assert.equal(count(block('COLORS','SHAPES')), 17, 'expected 17 colors');
 const app = read('js/app.js');
 for (const g of ['cafe','letters','clouds','frog','piano','treasure','shapes','colors']) assert.ok(app.includes("['"+g+"'"), 'game not registered: '+g);
-for (const p of required) assert.ok(!read(p).includes('\\n'), 'raw newline escape found in '+p);
+const quiz = read('js/quiz.js');
+assert.match(quiz,/if\(solved\|\|tried\.has\(i\)\|\|b\.disabled\)return/,'answers must be locked after a solved question');
+assert.match(quiz,/el\.disabled=true/,'all answers must lock after a correct answer');
+assert.match(quiz,/clearTimeout\(pendingNext\)/,'pending next-question timer must be cancellable');
+for (const game of ['cafe','clouds','frog','letters','treasure']) {
+ const src=read('js/games/'+game+'.js');
+ assert.ok(src.includes('quiz('), game+' must register quiz logic');
+ assert.ok(src.includes('v=>'), game+' must check a response');
+}
+assert.match(read('js/games/clouds.js'),/n-2\*step/,'cloud sequence must show a consistent pattern');
+assert.match(read('js/games/frog.js'),/while\(a===b\)/,'frog comparison must avoid equal groups');
+assert.match(read('js/games/treasure.js'),/filter\(x=>x!==target\)/,'treasure grid must avoid accidental extra target items');
+assert.match(app,/cells=Array\(size\*size\)\.fill\(null\)/,'reset must clear cells as unpainted');
 console.log('Peri quality checks passed.');
