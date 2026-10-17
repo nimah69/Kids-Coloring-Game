@@ -19,6 +19,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;ma
 .status-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 2px 0;color:var(--muted);font-size:12px}.progress{height:7px;background:#f4ecdf;border-radius:99px;overflow:hidden;flex:1;max-width:160px}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff8ca7,#ffd166);border-radius:99px;transition:width .2s}
 .side{display:grid;gap:14px}.palette{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.swatch{aspect-ratio:1;border:3px solid #fff;box-shadow:0 0 0 1px #e8e1d7;border-radius:14px;position:relative}.swatch.selected{box-shadow:0 0 0 3px var(--ink);transform:translateY(-2px)}.swatch.selected:after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;font-size:20px;font-weight:bold;color:#fff;text-shadow:0 1px 4px #0008}.swatch.light.selected:after{color:#29334a;text-shadow:none}
 .tools{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tool{border:1px solid var(--line);background:#fff9f0;border-radius:13px;padding:11px 7px;font-size:13px;color:var(--ink)}.tool.active{background:#e9f8ff;border-color:#7acdf0}.tool .ico{font-size:19px;display:block;margin-bottom:4px}.primary{border:0;background:linear-gradient(135deg,#ff8fab,#ffb4a2);color:#542b3b;font-weight:bold;border-radius:14px;padding:12px;width:100%;box-shadow:0 4px 0 #e58c9e}.primary:active{transform:translateY(2px);box-shadow:0 2px 0 #e58c9e}.secondary{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px;color:var(--ink)}.difficulty{display:flex;gap:6px}.difficulty button{flex:1;padding:9px 3px;border:1px solid var(--line);background:#fff;border-radius:10px;font-size:12px}.difficulty button.active{background:#f0eaff;border-color:#b8a1ff}.tip{background:#f0fbff;border:1px solid #d9f1fa;border-radius:14px;padding:12px;font-size:12px;line-height:1.8;color:#426578}.tip b{display:block;font-size:13px;margin-bottom:3px}
+.challenge-layout{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}.sample-card,.puzzle-card{background:#fffaf3;border:1px solid #f2e7d9;border-radius:16px;padding:10px;min-width:0}.sample-title{font-size:13px;font-weight:bold;margin:2px 0 9px}.sample-card p,.puzzle-card p{font-size:11px;line-height:1.7;color:var(--muted);margin:8px 2px 2px}.sample-wrap{background:#fff;border-color:#e6f0ff}.sample-wrap .board{pointer-events:none}.check-row{display:grid;grid-template-columns:minmax(0,190px) 1fr;gap:10px;align-items:center;margin-top:12px}.check-row #checkResult{font-size:12px;line-height:1.7;color:var(--muted);background:#f6fbff;border-radius:12px;padding:10px}.check-row .primary{width:auto}@media(max-width:520px){.challenge-layout{grid-template-columns:1fr}.check-row{grid-template-columns:1fr}.check-row .primary{width:100%}}
 footer{text-align:center;font-size:11px;color:#9296a3;margin-top:18px}
 @media(max-width:760px){.app{padding:12px 10px 25px}.layout{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}.side .panel:first-child{grid-column:1/-1}.palette{grid-template-columns:repeat(8,minmax(0,1fr));gap:7px}.swatch{border-radius:10px}.panel{padding:12px}.hero{padding:15px}.templates{grid-template-columns:repeat(4,minmax(0,1fr))}.brand p{font-size:11px}.saved{font-size:11px;padding:7px 9px}}
 @media(max-width:390px){.side{grid-template-columns:1fr}.side .panel:first-child{grid-column:auto}.palette{grid-template-columns:repeat(6,minmax(0,1fr))}.logo{width:42px;height:42px}.saved{white-space:normal;text-align:center;max-width:105px}}
@@ -42,8 +43,12 @@ footer{text-align:center;font-size:11px;color:#9296a3;margin-top:18px}
 <button class="template" data-pattern="apple"><span class="preview">🍎</span><span>سیب</span></button>
 <button class="template" data-pattern="free"><span class="preview">✏️</span><span>آزاد</span></button>
 </div>
-<div class="section-head"><h3>۲. خانه‌ها را رنگ کن</h3><span class="small-note">هر خانه را لمس کن</span></div>
-<div class="board-wrap"><div class="board" id="board" role="group" aria-label="شبکه رنگ‌آمیزی"></div></div>
+<div class="section-head"><h3>۲. از روی الگو رنگ‌آمیزی کن</h3><span class="small-note">به رنگ هر خانه دقت کن</span></div>
+<div class="challenge-layout">
+ <section class="sample-card"><div class="sample-title">🎨 الگوی نمونه</div><div class="board-wrap sample-wrap"><div class="board" id="sampleBoard" aria-label="الگوی رنگی نمونه"></div></div><p>این تصویر را نگاه کن و همان رنگ‌ها را در جدول کناری پیدا کن.</p></section>
+ <section class="puzzle-card"><div class="sample-title">🧩 جدول تو</div><div class="board-wrap"><div class="board" id="board" role="group" aria-label="شبکه رنگ‌آمیزی"></div></div><p>رنگ را از پایین انتخاب کن و خانه‌ها را لمس کن.</p></section>
+</div>
+<div class="check-row"><button class="primary" id="checkBtn">✅ بررسی نقاشی من</button><div id="checkResult" aria-live="polite">وقتی آماده شدی، نقاشی‌ات را بررسی کن.</div></div>
 <div class="status-row"><span id="countText">۰ خانه رنگ شده</span><div class="progress" aria-label="درصد رنگ‌آمیزی"><span id="progress"></span></div><span id="percent">۰٪</span></div>
 </main>
 <aside class="side">
@@ -64,7 +69,7 @@ footer{text-align:center;font-size:11px;color:#9296a3;margin-top:18px}
 'use strict';
 const colors=[['#ff5d73','قرمز'],['#ff914d','نارنجی'],['#ffd166','زرد'],['#70d6a3','سبز'],['#4ecdc4','فیروزه‌ای'],['#65a9ff','آبی'],['#8b7bff','بنفش'],['#ff8fc7','صورتی'],['#a66b45','قهوه‌ای'],['#29334a','سرمه‌ای'],['#ffffff','سفید'],['#b8c0cc','خاکستری']];
 const $=id=>document.getElementById(id), board=$('board');
-let size=8, pattern='heart', selected=colors[0][0], erasing=false, cells=[], history=[], currentMask=[];
+let size=8, pattern='heart', selected=colors[0][0], erasing=false, cells=[], history=[], currentMask=[], targetColors=[];
 const key='kidsColoringGame.v1';
 const patterns={
 heart:['..XX..XX.','XXXXXXXXX','.XXXXXXX.','..XXXXX..','...XXX...','....X....'],
@@ -87,11 +92,26 @@ function makeMask(name,n){
  }
  return mask;
 }
+function targetColor(name,x,y,n,inside){
+ if(!inside)return '#fff0df';
+ const u=x/(n-1),v=y/(n-1);
+ if(name==='heart')return v<.34?'#ff8fc7':'#ff5d73';
+ if(name==='flower'){if(v>.65)return '#70d6a3';if(v>.28&&v<.58&&u>.34&&u<.66)return '#ffd166';return '#ff8fc7'}
+ if(name==='fish'){if(u<.24)return '#ff914d';if(v>.35&&v<.58&&u>.48)return '#65a9ff';return '#4ecdc4'}
+ if(name==='house'){if(v<.34)return '#ff5d73';if(v>.68&&u>.38&&u<.63)return '#a66b45';if(v>.38&&((u>.18&&u<.36)||(u>.66&&u<.84)))return '#65a9ff';return '#ffd166'}
+ if(name==='butterfly'){if(u>.42&&u<.58)return '#ffd166';return v<.5?'#b8a1ff':'#ff8fc7'}
+ if(name==='rocket'){if(v<.22)return '#ff5d73';if(v>.78)return '#ff914d';return '#65a9ff'}
+ if(name==='apple'){if(v<.22&&u>.42&&u<.64)return '#70d6a3';if(v<.2)return '#a66b45';return '#ff5d73'}
+ return '#ffffff';
+}
 function baseColor(i){return pattern==='free'||currentMask[i]?'#ffffff':'#fff0df'}
 function baseBorder(i){return pattern==='free'||currentMask[i]?'#e9e5df':'#f5e5d2'}
 function buildBoard(restore){
  size=Number(size);board.innerHTML='';board.className='board'+(size===10?' grid-10':size===12?' grid-12':'');
+ const sample=$('sampleBoard');sample.innerHTML='';sample.className='board'+(size===10?' grid-10':size===12?' grid-12':'');
  const mask=makeMask(pattern,size), stored=restore?loadSaved():null;currentMask=mask;
+ targetColors=Array.from({length:size*size},(_,i)=>targetColor(pattern,i%size,Math.floor(i/size),size,mask[i]));
+ for(let i=0;i<size*size;i++){const s=document.createElement('div');s.className='cell';s.style.backgroundColor=targetColors[i];s.style.borderColor=mask[i]?'#ffffff':'#f5e5d2';sample.appendChild(s);}
  cells=Array(size*size).fill('#ffffff');
  if(stored&&stored.size===size&&stored.pattern===pattern&&stored.cells.length===cells.length)cells=stored.cells;
  for(let i=0;i<size*size;i++){
@@ -129,6 +149,14 @@ $('paintTool').addEventListener('click',()=>{erasing=false;$('paintTool').classL
 $('eraserTool').addEventListener('click',()=>{erasing=true;$('eraserTool').classList.add('active');$('paintTool').classList.remove('active')});
 $('undoBtn').addEventListener('click',()=>{const last=history.pop();if(!last)return;cells[last.i]=last.old;const el=board.children[last.i];el.style.backgroundColor=last.old==='#ffffff'?baseColor(last.i):last.old;el.style.borderColor=last.old==='#ffffff'?baseBorder(last.i):'#ffffff';updateStats();save(true)});
 $('resetBtn').addEventListener('click',()=>{if(!confirm('همه‌ی رنگ‌ها پاک شوند؟'))return;history=[];cells=Array(size*size).fill('#ffffff');Array.from(board.children).forEach((el,i)=>{el.style.backgroundColor=baseColor(i);el.style.borderColor=baseBorder(i)});updateStats();save(true)});
+$('checkBtn').addEventListener('click',()=>{
+ if(pattern==='free'){$('checkResult').textContent='برای تمرین با الگوی رنگی، یکی از شکل‌ها را انتخاب کن.';return}
+ let correct=0,total=0,wrong=[];
+ for(let i=0;i<cells.length;i++){if(!currentMask[i])continue;total++;if(cells[i].toLowerCase()===targetColors[i].toLowerCase())correct++;else wrong.push(i)}
+ const pct=total?Math.round(correct/total*100):0;
+ $('checkResult').textContent=pct===100?'آفرین! 🎉 همه‌ی خانه‌ها دقیقاً مثل الگو هستند!':('خیلی خوب تلاش کردی! '+correct.toLocaleString('fa-IR')+' خانه از '+total.toLocaleString('fa-IR')+' خانه درست است ('+pct.toLocaleString('fa-IR')+'٪). خانه‌های '+wrong.length.toLocaleString('fa-IR')+'تایی را دوباره با نمونه مقایسه کن.');
+ wrong.forEach(i=>{const el=board.children[i];el.style.outline='2px solid #ff8c42';el.style.outlineOffset='-2px'});setTimeout(()=>Array.from(board.children).forEach(el=>el.style.outline=''),1800);
+});
 $('surpriseBtn').addEventListener('click',()=>{const c=colors[Math.floor(Math.random()*colors.length)][0];chooseColor(c);$('saveStatus').textContent='🎉 رنگ تازه انتخاب شد!'});
 document.querySelectorAll('#sizes button').forEach(b=>b.addEventListener('click',()=>{size=Number(b.dataset.size);document.querySelectorAll('#sizes button').forEach(x=>x.classList.toggle('active',x===b));history=[];buildBoard(false)}));
 const old=loadSaved();if(old&&Number.isInteger(old.size)&&[8,10,12].includes(old.size)){size=old.size;if(old.pattern&&['heart','flower','fish','house','butterfly','rocket','apple','free'].includes(old.pattern))pattern=old.pattern;document.querySelectorAll('#sizes button').forEach(b=>b.classList.toggle('active',Number(b.dataset.size)===size));document.querySelectorAll('.template').forEach(b=>b.classList.toggle('active',b.dataset.pattern===pattern));}
