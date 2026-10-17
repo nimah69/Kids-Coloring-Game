@@ -1,5 +1,5 @@
-const CACHE_NAME = 'kids-coloring-game-v5';
-const APP_FILES = ['./', './index.html', './manifest.webmanifest'];
+const CACHE_NAME = 'kids-coloring-game-v6';
+const APP_FILES = ['./', './index.html', './style.css', './app.js', './manifest.webmanifest', './favicon.svg', './apple-touch-icon.svg', './icon-maskable.svg'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_FILES)));
@@ -8,7 +8,7 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))))
+    caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('kids-coloring-game-') && key !== CACHE_NAME).map(key => caches.delete(key))))
   );
   self.clients.claim();
 });
