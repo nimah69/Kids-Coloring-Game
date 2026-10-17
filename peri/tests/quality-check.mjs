@@ -28,5 +28,5 @@ for (const game of ['cafe','clouds','frog','letters','treasure']) {
 assert.match(read('js/games/clouds.js'),/n-2\*step/,'cloud sequence must show a consistent pattern');
 assert.match(read('js/games/frog.js'),/while\(a===b\)/,'frog comparison must avoid equal groups');
 assert.match(read('js/games/treasure.js'),/filter\(x=>x!==target\)/,'treasure grid must avoid accidental extra target items');
-assert.match(app,/cells=Array\(size\*size\)\.fill\(null\)/,'reset must clear cells as unpainted');
+assert.match(coloringApp,/cells=Array\(size\*size\)\.fill\(null\)/,'reset must clear cells as unpainted');
 console.log('Peri quality checks passed.');
