@@ -11,7 +11,7 @@ heart:['..XX.XX..','.XXXXXXX.','XXXXXXXXX','.XXXXXXX.','..XXXXX..','...XXX...','
 flower:['...X....','..XXX...','.XXXXX..','..XXX...','...X....','..XXX...','..X.X...'],
 fish:['...XXX...','..XXXXX..','.XXXXXXX.','XXXXXXXXX','.XXXXXXX.','..XXXXX..','...XXX...'],
 house:['...XX...','..XXXX..','.XXXXXX.','XXXXXXXX','XX.XX.XX','XX.XX.XX','XXXXXXXX'],
-butterfly:['XX.....XX','XXX...XXX','.XX...XX..','..XXXXXX..','.XXXXXXXX.','XXX....XXX','XX......XX'],
+butterfly:['XX.....XX','XXX...XXX','.XX...XX.','..XXXXX..','.XXXXXXX.','XXX...XXX','XX.....XX'],
 rocket:['...XX...','..XXXX..','..XXXX..','..XXXX..','..XXXX..','.XXXXXX.','XX.XX.XX'],
 apple:['..XXXX..','.XXXXXX.','XXXXXXXX','XXXXXXXX','.XXXXXX.','..XXXX..','...XX...']
 };
