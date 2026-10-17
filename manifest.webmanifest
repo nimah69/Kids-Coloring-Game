@@ -1,0 +1,13 @@
+{
+  "name": "دنیای رنگی من | بازی رنگ‌آمیزی",
+  "short_name": "دنیای رنگی",
+  "description": "بازی رنگ‌آمیزی پیکسلی ساده برای کودکان",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fff6e8",
+  "theme_color": "#fff6e8",
+  "icons": []
+}
