@@ -34,6 +34,9 @@ assert.ok(sw.includes('./app.js') && sw.includes('./style.css'), 'Cache must inc
 assert.match(sw, /kids-coloring-game-v\d+/, 'Versioned cache required');
 assert.match(sw, /key\.startsWith\('kids-coloring-game-'\)/, 'Only this app cache family should be removed');
 
+assert.match(sw, /event\.request\.mode === 'navigate'/, 'Offline HTML fallback must be limited to navigations');
+assert.match(sw, /throw error/, 'Missing offline assets must not be answered with HTML');
+
 const patternMatch = js.match(/const patterns=\{([\s\S]*?)\n\};/);
 assert.ok(patternMatch, 'Pattern definitions required');
 const patterns = new Function('return ({' + patternMatch[1] + '})')();
