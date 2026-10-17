@@ -1,14 +1,14 @@
 import {record,addStar,speak,fireworks,renderHeader} from './core.js';
 const praise=['آفرین! ✨','عالی بود! 🌟','چه باهوشی! 🦋','درست گفتی! 🎉'];
 let pendingNext=null;
-export function quiz(game,next,instruction,visual,options,isCorrect,classes=''){
+export function quiz(game,next,instruction,visual,options,isCorrect,classes='',replay=null){
   if(pendingNext!==null){clearTimeout(pendingNext);pendingNext=null}
   const root=document.querySelector('#app'),bubble=document.querySelector('#bubble');
   bubble.textContent=instruction;speak(instruction);
   root.innerHTML='<section class="panel"><div class="question"></div><div class="picture"></div><div class="options"></div><div class="actions"><button id="hear" aria-label="شنیدن دوباره">🔊 شنیدن دوباره</button><button id="home" class="primary">🏠 خانه</button></div></section>';
   root.querySelector('.question').textContent=instruction;
   root.querySelector('.picture').innerHTML=visual;
-  root.querySelector('#hear').onclick=()=>speak(instruction);
+  root.querySelector('#hear').onclick=()=>{speak(instruction);if(typeof replay==='function')replay()};
   root.querySelector('#home').onclick=()=>{if(pendingNext!==null)clearTimeout(pendingNext);pendingNext=null;document.dispatchEvent(new Event('peri:home'))};
   const box=root.querySelector('.options');let solved=false;const tried=new Set();
   options.forEach((op,i)=>{
@@ -32,3 +32,5 @@ export function quiz(game,next,instruction,visual,options,isCorrect,classes=''){
   });
 }
 export function homeButton(){if(pendingNext!==null)clearTimeout(pendingNext);pendingNext=null;document.dispatchEvent(new Event('peri:home'))}
+
+document.addEventListener('peri:home',()=>{if(pendingNext!==null)clearTimeout(pendingNext);pendingNext=null});
